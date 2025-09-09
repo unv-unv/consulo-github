@@ -17,22 +17,20 @@ package org.jetbrains.plugins.github;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
-import consulo.ide.impl.idea.openapi.vcs.annotate.LineNumberListener;
-import consulo.ide.impl.idea.openapi.vcs.impl.UpToDateLineNumberProviderImpl;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.versionControlSystem.UpToDateLineNumberProvider;
+import consulo.versionControlSystem.action.LineNumberListener;
 import consulo.versionControlSystem.annotate.FileAnnotation;
 import consulo.versionControlSystem.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import git4idea.GitUtil;
 import git4idea.repo.GitRepository;
-import org.jetbrains.plugins.github.util.GithubUtil;
-
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import org.jetbrains.plugins.github.util.GithubUtil;
 
 /**
  * @author Kirill Likhodedov
@@ -86,7 +84,7 @@ public class GithubShowCommitInBrowserFromAnnotateAction extends GithubShowCommi
         if (document == null) {
             return null;
         }
-        final UpToDateLineNumberProvider myGetUpToDateLineNumber = new UpToDateLineNumberProviderImpl(
+        final UpToDateLineNumberProvider myGetUpToDateLineNumber = UpToDateLineNumberProvider.of(
             document,
             project
         );
@@ -101,7 +99,7 @@ public class GithubShowCommitInBrowserFromAnnotateAction extends GithubShowCommi
     }
 
     @Override
-    public void accept(Integer integer) {
+    public void accept(int integer) {
         myLineNumber = integer;
     }
 

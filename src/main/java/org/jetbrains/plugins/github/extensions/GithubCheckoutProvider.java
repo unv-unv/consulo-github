@@ -16,7 +16,6 @@
 package org.jetbrains.plugins.github.extensions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.function.ThrowableFunction;
@@ -27,6 +26,8 @@ import git4idea.actions.BasicAction;
 import git4idea.checkout.GitCheckoutProvider;
 import git4idea.checkout.GitCloneDialog;
 import git4idea.commands.Git;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.plugins.github.api.GithubApiUtil;
 import org.jetbrains.plugins.github.api.GithubRepo;
 import org.jetbrains.plugins.github.exceptions.GithubAuthenticationCanceledException;
@@ -34,8 +35,6 @@ import org.jetbrains.plugins.github.util.GithubAuthData;
 import org.jetbrains.plugins.github.util.GithubNotifications;
 import org.jetbrains.plugins.github.util.GithubUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -99,7 +98,7 @@ public class GithubCheckoutProvider implements CheckoutProvider {
         final String parentDirectory = dialog.getParentDirectory();
         final String puttyKey = dialog.getPuttyKeyFile();
 
-        Git git = ServiceManager.getService(Git.class);
+        Git git = Git.getInstance();
         GitCheckoutProvider.clone(
             project,
             git,

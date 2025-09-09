@@ -18,12 +18,12 @@ package org.jetbrains.plugins.github.util;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.credentialStorage.PasswordSafe;
-import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import jakarta.annotation.Nonnull;
@@ -83,7 +83,7 @@ public class GithubSettings implements PersistentStateComponent<GithubSettings.S
     }
 
     public static GithubSettings getInstance() {
-        return ServiceManager.getService(GithubSettings.class);
+        return Application.get().getInstance(GithubSettings.class);
     }
 
     @Nonnull

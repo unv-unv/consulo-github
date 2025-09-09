@@ -12,6 +12,5 @@ open module org.jetbrains.plugins.github {
 
     // TODO [VISTALL] remove in future
     requires java.desktop;
-    requires consulo.ide.impl;
     requires forms.rt;
 }

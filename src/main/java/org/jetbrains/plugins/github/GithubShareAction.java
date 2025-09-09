@@ -22,23 +22,24 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.git.localize.GitLocalize;
 import consulo.github.icon.GitHubIconGroup;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.SelectFilesDialog;
-import consulo.ide.impl.idea.openapi.vcs.ui.CommitMessage;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Splitter;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
+import consulo.versionControlSystem.CommitMessage;
+import consulo.versionControlSystem.CommitMessageFactory;
 import consulo.versionControlSystem.VcsDataKeys;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.ChangeListManager;
+import consulo.versionControlSystem.ui.awt.ChangesBrowserTree;
+import consulo.versionControlSystem.ui.awt.LegacyComponentFactory;
 import consulo.versionControlSystem.util.VcsFileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import git4idea.DialogManager;
@@ -51,6 +52,8 @@ import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
 import git4idea.util.GitFileUtils;
 import git4idea.util.GitUIUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.plugins.github.api.GithubApiUtil;
 import org.jetbrains.plugins.github.api.GithubRepo;
 import org.jetbrains.plugins.github.api.GithubUserDetailed;
@@ -61,9 +64,8 @@ import org.jetbrains.plugins.github.util.GithubNotifications;
 import org.jetbrains.plugins.github.util.GithubUrlUtil;
 import org.jetbrains.plugins.github.util.GithubUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -337,7 +339,7 @@ public class GithubShareAction extends DumbAwareAction {
                 () -> {
                     GithubUntrackedFilesDialog dialog = new GithubUntrackedFilesDialog(project, allFiles);
                     if (!trackedFiles.isEmpty()) {
-                        dialog.setSelectedFiles(trackedFiles);
+                        dialog.myFileList.setIncludedChanges(trackedFiles);
                     }
                     DialogManager.show(dialog);
                     dialogRef.set(dialog);
@@ -353,7 +355,7 @@ public class GithubShareAction extends DumbAwareAction {
             }
 
             Collection<VirtualFile> files2add = ContainerUtil.intersection(untrackedFiles, files2commit);
-            Collection<VirtualFile> files2rm = consulo.ide.impl.idea.util.containers.ContainerUtil.subtract(trackedFiles, files2commit);
+            Collection<VirtualFile> files2rm = ContainerUtil.subtract(trackedFiles, files2commit);
             Collection<VirtualFile> modified = new HashSet<>(trackedFiles);
             modified.addAll(files2commit);
 
@@ -394,7 +396,7 @@ public class GithubShareAction extends DumbAwareAction {
         @Nonnull String name,
         @Nonnull String url
     ) {
-        Git git = ServiceManager.getService(Git.class);
+        Git git = Git.getInstance();
 
         GitLocalBranch currentBranch = repository.getCurrentBranch();
         if (currentBranch == null) {
@@ -421,34 +423,63 @@ public class GithubShareAction extends DumbAwareAction {
         return true;
     }
 
-    public static class GithubUntrackedFilesDialog extends SelectFilesDialog implements TypeSafeDataProvider {
+    public static class GithubUntrackedFilesDialog extends DialogWrapper implements TypeSafeDataProvider {
         @Nonnull
         private final Project myProject;
         private CommitMessage myCommitMessagePanel;
 
+        @Nonnull
+        private final ChangesBrowserTree<VirtualFile> myFileList;
+
         public GithubUntrackedFilesDialog(@Nonnull Project project, @Nonnull List<VirtualFile> untrackedFiles) {
-            super(project, untrackedFiles, null, null, true, false, false);
+            super(project);
             myProject = project;
+            myFileList = Application.get().getInstance(LegacyComponentFactory.class).createVirtualFileList(project,
+                untrackedFiles,
+                true,
+                false);
+            myFileList.setChangesToDisplay(untrackedFiles);
+
             setTitle("Add Files For Initial Commit");
             init();
         }
 
+        public Collection<VirtualFile> getSelectedFiles() {
+            return myFileList.getIncludedChanges();
+        }
+
+        @RequiredUIAccess
         @Override
-        protected JComponent createNorthPanel() {
-            return null;
+        public JComponent getPreferredFocusedComponent() {
+            return myFileList.getComponent();
+        }
+
+        private JComponent createToolbar() {
+            ActionGroup group = createToolbarActions();
+            ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+            return toolbar.getComponent();
+        }
+
+        @Nonnull
+        private ActionGroup createToolbarActions() {
+            return ActionGroup.of(myFileList.getTreeActions());
         }
 
         @Override
         protected JComponent createCenterPanel() {
-            final JComponent tree = super.createCenterPanel();
+            JPanel treePanel = new JPanel(new BorderLayout());
+            treePanel.add(createToolbar(), BorderLayout.NORTH);
+            treePanel.add(myFileList.getComponent(), BorderLayout.CENTER);
 
-            myCommitMessagePanel = new CommitMessage(myProject);
+            CommitMessageFactory messageFactory = myProject.getInstance(CommitMessageFactory.class);
+
+            myCommitMessagePanel = messageFactory.create();
             myCommitMessagePanel.setCommitMessage("Initial commit");
 
             Splitter splitter = new Splitter(true);
             splitter.setHonorComponentsMinimumSize(true);
-            splitter.setFirstComponent(tree);
-            splitter.setSecondComponent(myCommitMessagePanel);
+            splitter.setFirstComponent(treePanel);
+            splitter.setSecondComponent(myCommitMessagePanel.getComponent());
             splitter.setProportion(0.7f);
 
             return splitter;
@@ -456,7 +487,7 @@ public class GithubShareAction extends DumbAwareAction {
 
         @Nonnull
         public String getCommitMessage() {
-            return myCommitMessagePanel.getComment();
+            return myCommitMessagePanel.getCommitMessage();
         }
 
         @Override

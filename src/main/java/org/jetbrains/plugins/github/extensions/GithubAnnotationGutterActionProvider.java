@@ -16,12 +16,11 @@
 package org.jetbrains.plugins.github.extensions;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationGutterActionProvider;
 import consulo.ui.ex.action.AnAction;
+import consulo.versionControlSystem.annotate.AnnotationGutterActionProvider;
 import consulo.versionControlSystem.annotate.FileAnnotation;
-import org.jetbrains.plugins.github.GithubShowCommitInBrowserFromAnnotateAction;
-
 import jakarta.annotation.Nonnull;
+import org.jetbrains.plugins.github.GithubShowCommitInBrowserFromAnnotateAction;
 
 /**
  * @author Kirill Likhodedov

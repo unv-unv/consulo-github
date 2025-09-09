@@ -15,12 +15,10 @@
  */
 package org.jetbrains.plugins.github;
 
+import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.github.icon.GitHubIconGroup;
-import consulo.ide.ServiceManager;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesBrowser;
-import consulo.ide.impl.idea.ui.TabbedPaneImpl;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -32,13 +30,14 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
+import consulo.versionControlSystem.change.ChangesBrowser;
+import consulo.versionControlSystem.change.ChangesBrowserFactory;
 import consulo.virtualFileSystem.VirtualFile;
 import git4idea.DialogManager;
 import git4idea.GitCommit;
@@ -51,6 +50,8 @@ import git4idea.history.GitHistoryUtils;
 import git4idea.repo.GitRemote;
 import git4idea.repo.GitRepository;
 import git4idea.ui.GitCommitListPanel;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.plugins.github.api.*;
 import org.jetbrains.plugins.github.exceptions.GithubAuthenticationCanceledException;
 import org.jetbrains.plugins.github.ui.GithubCreatePullRequestDialog;
@@ -59,8 +60,6 @@ import org.jetbrains.plugins.github.util.GithubNotifications;
 import org.jetbrains.plugins.github.util.GithubUrlUtil;
 import org.jetbrains.plugins.github.util.GithubUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
@@ -120,7 +119,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
 
     @RequiredUIAccess
     static void createPullRequest(@Nonnull final Project project, @Nullable final VirtualFile file) {
-        final Git git = ServiceManager.getService(Git.class);
+        final Git git = Git.getInstance();
 
         final GitRepository repository = GithubUtil.getGitRepository(project, file);
         if (repository == null) {
@@ -483,11 +482,10 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
             myLogPanel = new GithubCreatePullRequestLogPanel(myProject, myInfo);
             JPanel diffPanel = new GithubCreatePullRequestDiffPanel(myProject, myInfo);
 
-            TabbedPaneImpl tabbedPane = new TabbedPaneImpl(SwingConstants.TOP);
-            tabbedPane.addTab("Log", TargetAWT.to(PlatformIconGroup.vcsBranch()), myLogPanel);
-            tabbedPane.addTab("Diff", TargetAWT.to(PlatformIconGroup.actionsDiff()), diffPanel);
-            tabbedPane.setKeyboardNavigation(TabbedPaneWrapper.DEFAULT_PREV_NEXT_SHORTCUTS);
-            return tabbedPane;
+            TabbedPaneWrapper wrapper = new TabbedPaneWrapper(getDisposable());
+            wrapper.addTab("Log", PlatformIconGroup.vcsBranch(), myLogPanel, null);
+            wrapper.addTab("Diff", PlatformIconGroup.actionsDiff(), diffPanel, null);
+            return wrapper.getComponent();
         }
 
         @Nonnull
@@ -515,11 +513,13 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
         }
 
         private JComponent createCenterPanel() {
-            List<Change> diff = new ArrayList<Change>(myInfo.getDiff());
+            List<Change> diff = new ArrayList<>(myInfo.getDiff());
+            ChangesBrowserFactory browserFactory = Application.get().getInstance(ChangesBrowserFactory.class);
+
             final ChangesBrowser changesBrowser =
-                new ChangesBrowser(myProject, null, diff, null, false, true, null, ChangesBrowser.MyUseCase.COMMITTED_CHANGES, null);
+                browserFactory.createChangeBrowser(myProject, null, diff, null, false, true, null, ChangesBrowser.MyUseCase.COMMITTED_CHANGES, null);
             changesBrowser.setChangesToDisplay(diff);
-            return changesBrowser;
+            return changesBrowser.getComponent();
         }
     }
 
@@ -538,7 +538,8 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
         }
 
         private JComponent createCenterPanel() {
-            final ChangesBrowser changesBrowser = new ChangesBrowser(
+            ChangesBrowserFactory browserFactory = Application.get().getInstance(ChangesBrowserFactory.class);
+            final ChangesBrowser<Change> changesBrowser = browserFactory.createChangeBrowser(
                 myProject,
                 null,
                 Collections.emptyList(),
@@ -559,7 +560,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
             myCommitPanel.registerDiffAction(changesBrowser.getDiffAction());
 
             Splitter rootPanel = new Splitter(false, 0.7f);
-            rootPanel.setSecondComponent(changesBrowser);
+            rootPanel.setSecondComponent(changesBrowser.getComponent());
             rootPanel.setFirstComponent(myCommitPanel);
 
             return rootPanel;
@@ -567,7 +568,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
 
         private static void addSelectionListener(
             @Nonnull GitCommitListPanel sourcePanel,
-            @Nonnull final ChangesBrowser changesBrowser
+            @Nonnull final ChangesBrowser<Change> changesBrowser
         ) {
             sourcePanel.addListSelectionListener(commit -> changesBrowser.setChangesToDisplay(new ArrayList<>(commit.getChanges())));
         }

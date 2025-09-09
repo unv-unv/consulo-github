@@ -18,7 +18,6 @@ package org.jetbrains.plugins.github;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.github.icon.GitHubIconGroup;
-import consulo.ide.ServiceManager;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -40,6 +39,8 @@ import git4idea.update.GitFetchResult;
 import git4idea.update.GitFetcher;
 import git4idea.update.GitUpdateResult;
 import git4idea.util.GitPreservingProcess;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.plugins.github.api.GithubApiUtil;
 import org.jetbrains.plugins.github.api.GithubFullPath;
 import org.jetbrains.plugins.github.api.GithubRepoDetailed;
@@ -49,8 +50,6 @@ import org.jetbrains.plugins.github.util.GithubSettings;
 import org.jetbrains.plugins.github.util.GithubUrlUtil;
 import org.jetbrains.plugins.github.util.GithubUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -284,7 +283,7 @@ public class GithubRebaseAction extends DumbAwareAction {
         @Nonnull final GitRepository gitRepository,
         @Nonnull final ProgressIndicator indicator
     ) {
-        final Git git = ServiceManager.getService(project, Git.class);
+        final Git git = Git.getInstance();
         List<VirtualFile> rootsToSave = Collections.singletonList(gitRepository.getRoot());
         GitPreservingProcess process = new GitPreservingProcess(
             project,
@@ -307,7 +306,7 @@ public class GithubRebaseAction extends DumbAwareAction {
     ) {
         final GitRepositoryManager repositoryManager = GitUtil.getRepositoryManager(project);
 
-        final GitRebaser rebaser = new GitRebaser(project, ServiceManager.getService(Git.class), indicator);
+        final GitRebaser rebaser = new GitRebaser(project, Git.getInstance(), indicator);
 
         final GitLineHandler handler = new GitLineHandler(project, root, GitCommand.REBASE);
         handler.addParameters("upstream/master");

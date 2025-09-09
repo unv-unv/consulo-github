@@ -18,11 +18,13 @@ package org.jetbrains.plugins.github.util;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.function.ThrowableFunction;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.inject.Singleton;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -32,8 +34,6 @@ import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
 import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 
 /**
@@ -46,7 +46,7 @@ import java.io.IOException;
 @Singleton
 public class GithubSslSupport {
     public static GithubSslSupport getInstance() {
-        return ServiceManager.getService(GithubSslSupport.class);
+        return Application.get().getInstance(GithubSslSupport.class);
     }
 
     /**
