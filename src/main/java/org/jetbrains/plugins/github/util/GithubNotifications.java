@@ -16,15 +16,18 @@
 package org.jetbrains.plugins.github.util;
 
 
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.versionControlSystem.VcsNotifier;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+
 import java.awt.*;
 
 import static org.jetbrains.plugins.github.util.GithubUtil.getErrorTextFromException;
@@ -37,84 +40,89 @@ public class GithubNotifications {
         VcsNotifier.getInstance(project).notifyImportantInfo(title, message);
     }
 
-    public static void showWarning(@Nonnull Project project, @Nonnull String title, @Nonnull String message) {
+    public static void showWarning(@Nonnull Project project, @Nonnull LocalizeValue title, @Nonnull LocalizeValue message) {
         LOG.info(title + "; " + message);
-        VcsNotifier.getInstance(project).notifyImportantWarning(title, message);
+        VcsNotifier.getInstance(project).notifyImportantWarning(title.get(), message.get());
     }
 
-    public static void showError(@Nonnull Project project, @Nonnull String title, @Nonnull String message) {
+    public static void showError(@Nonnull Project project, @Nonnull LocalizeValue title, @Nonnull LocalizeValue message) {
         LOG.info(title + "; " + message);
-        VcsNotifier.getInstance(project).notifyError(title, message);
+        VcsNotifier.getInstance(project).notifyError(title.get(), message.get());
     }
 
     public static void showError(
         @Nonnull Project project,
-        @Nonnull String title,
-        @Nonnull String message,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue message,
         @Nonnull String logDetails
     ) {
         LOG.warn(title + "; " + message + "; " + logDetails);
-        VcsNotifier.getInstance(project).notifyError(title, message);
+        VcsNotifier.getInstance(project).notifyError(title.get(), message.get());
     }
 
-    public static void showError(@Nonnull Project project, @Nonnull String title, @Nonnull Exception e) {
+    public static void showError(@Nonnull Project project, @Nonnull LocalizeValue title, @Nonnull Exception e) {
         LOG.warn(title + "; ", e);
-        VcsNotifier.getInstance(project).notifyError(title, getErrorTextFromException(e));
+        VcsNotifier.getInstance(project).notifyError(title.get(), getErrorTextFromException(e));
     }
 
     public static void showInfoURL(
         @Nonnull Project project,
-        @Nonnull String title,
+        @Nonnull LocalizeValue title,
         @Nonnull String message,
         @Nonnull String url
     ) {
         LOG.info(title + "; " + message + "; " + url);
-        VcsNotifier.getInstance(project).notifyImportantInfo(title, "<a href='" + url + "'>" + message + "</a>",
+        VcsNotifier.getInstance(project).notifyImportantInfo(
+            title.get(),
+            "<a href='" + url + "'>" + message + "</a>",
             NotificationListener.URL_OPENING_LISTENER
         );
     }
 
     public static void showWarningURL(
         @Nonnull Project project,
-        @Nonnull String title,
+        @Nonnull LocalizeValue title,
         @Nonnull String prefix,
         @Nonnull String highlight,
         @Nonnull String postfix,
         @Nonnull String url
     ) {
         LOG.info(title + "; " + prefix + highlight + postfix + "; " + url);
-        VcsNotifier.getInstance(project).notifyImportantWarning(title, prefix + "<a href='" + url + "'>" + highlight +
-            "</a>" + postfix, NotificationListener.URL_OPENING_LISTENER);
+        VcsNotifier.getInstance(project).notifyImportantWarning(
+            title.get(),
+            prefix + "<a href='" + url + "'>" + highlight + "</a>" + postfix,
+            NotificationListener.URL_OPENING_LISTENER
+        );
     }
 
     public static void showErrorURL(
         @Nonnull Project project,
-        @Nonnull String title,
+        @Nonnull LocalizeValue title,
         @Nonnull String prefix,
         @Nonnull String highlight,
         @Nonnull String postfix,
         @Nonnull String url
     ) {
         LOG.info(title + "; " + prefix + highlight + postfix + "; " + url);
-        VcsNotifier.getInstance(project).notifyError(title, prefix + "<a href='" + url + "'>" + highlight + "</a>" +
+        VcsNotifier.getInstance(project).notifyError(title.get(), prefix + "<a href='" + url + "'>" + highlight + "</a>" +
             postfix, NotificationListener.URL_OPENING_LISTENER);
     }
 
     @RequiredUIAccess
     public static void showInfoDialog(
-        final @Nullable Project project,
-        final @Nonnull String title,
-        final @Nonnull String message
+        @Nullable Project project,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue message
     ) {
         LOG.info(title + "; " + message);
-        Messages.showInfoMessage(project, message, title);
+        Messages.showInfoMessage(project, message.get(), title.get());
     }
 
     @RequiredUIAccess
     public static void showInfoDialog(
-        final @Nonnull Component component,
-        final @Nonnull String title,
-        final @Nonnull String message
+        @Nonnull Component component,
+        @Nonnull String title,
+        @Nonnull String message
     ) {
         LOG.info(title + "; " + message);
         Messages.showInfoMessage(component, message, title);
@@ -122,59 +130,59 @@ public class GithubNotifications {
 
     @RequiredUIAccess
     public static void showWarningDialog(
-        final @Nullable Project project,
-        final @Nonnull String title,
-        final @Nonnull String message
+        @Nullable Project project,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue message
     ) {
         LOG.info(title + "; " + message);
-        Messages.showWarningDialog(project, message, title);
+        Messages.showWarningDialog(project, message.get(), title.get());
     }
 
     @RequiredUIAccess
     public static void showWarningDialog(
-        final @Nonnull Component component,
-        final @Nonnull String title,
-        final @Nonnull String message
+        @Nonnull Component component,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue message
     ) {
         LOG.info(title + "; " + message);
-        Messages.showWarningDialog(component, message, title);
+        Messages.showWarningDialog(component, message.get(), title.get());
     }
 
     @RequiredUIAccess
     public static void showErrorDialog(
-        final @Nullable Project project,
-        final @Nonnull String title,
-        final @Nonnull String message
+        @Nullable Project project,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue message
     ) {
         LOG.info(title + "; " + message);
-        Messages.showErrorDialog(project, message, title);
+        Messages.showErrorDialog(project, message.get(), title.get());
     }
 
     @RequiredUIAccess
     public static void showErrorDialog(
-        final @Nullable Project project,
-        final @Nonnull String title,
-        final @Nonnull Exception e
+        @Nullable Project project,
+        @Nonnull LocalizeValue title,
+        @Nonnull Exception e
     ) {
-        LOG.warn(title, e);
-        Messages.showErrorDialog(project, getErrorTextFromException(e), title);
+        LOG.warn(title.get(), e);
+        Messages.showErrorDialog(project, getErrorTextFromException(e), title.get());
     }
 
     @RequiredUIAccess
     public static void showErrorDialog(
-        final @Nonnull Component component,
-        final @Nonnull String title,
-        final @Nonnull String message
+        @Nonnull Component component,
+        @Nonnull LocalizeValue title,
+        @Nonnull LocalizeValue message
     ) {
         LOG.info(title + "; " + message);
-        Messages.showErrorDialog(component, message, title);
+        Messages.showErrorDialog(component, message.get(), title.get());
     }
 
     @RequiredUIAccess
     public static void showErrorDialog(
-        final @Nonnull Component component,
-        final @Nonnull String title,
-        final @Nonnull Exception e
+        @Nonnull Component component,
+        @Nonnull String title,
+        @Nonnull Exception e
     ) {
         LOG.info(title, e);
         Messages.showInfoMessage(component, getErrorTextFromException(e), title);
@@ -182,10 +190,10 @@ public class GithubNotifications {
 
     @RequiredUIAccess
     public static int showYesNoDialog(
-        final @Nullable Project project,
-        final @Nonnull String title,
-        final @Nonnull String message
+        @Nullable Project project,
+        @Nonnull String title,
+        @Nonnull String message
     ) {
-        return Messages.showYesNoDialog(project, message, title, Messages.getQuestionIcon());
+        return Messages.showYesNoDialog(project, message, title, UIUtil.getQuestionIcon());
     }
 }

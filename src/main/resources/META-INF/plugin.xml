@@ -9,25 +9,4 @@
     <tags>
         <tag>vcs</tag>
     </tags>
-
-    <actions>
-        <action id="Github.Share" class="org.jetbrains.plugins.github.GithubShareAction">
-            <add-to-group group-id="Vcs.Import"/>
-        </action>
-        <action id="Github.Rebase" class="org.jetbrains.plugins.github.GithubRebaseAction">
-            <add-to-group group-id="Git.Menu"/>
-        </action>
-        <action id="Github.Create.Pull.Request" class="org.jetbrains.plugins.github.GithubCreatePullRequestAction">
-            <add-to-group group-id="Git.Menu"/>
-        </action>
-        <action id="Github.Open.Commit.In.Browser" class="org.jetbrains.plugins.github.GithubShowCommitInBrowserFromLogAction">
-            <add-to-group group-id="Git.LogContextMenu"/>
-        </action>
-        <action id="Github.Create.Gist" class="org.jetbrains.plugins.github.GithubCreateGistAction">
-            <add-to-group group-id="EditorPopupMenu"/>
-            <add-to-group group-id="ProjectViewPopupMenu"/>
-            <add-to-group group-id="EditorTabPopupMenu"/>
-            <add-to-group group-id="ConsoleEditorPopupMenu"/>
-        </action>
-    </actions>
 </consulo-plugin>

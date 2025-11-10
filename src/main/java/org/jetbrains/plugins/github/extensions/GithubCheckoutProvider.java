@@ -16,6 +16,7 @@
 package org.jetbrains.plugins.github.extensions;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.function.ThrowableFunction;
@@ -47,7 +48,7 @@ import java.util.List;
 public class GithubCheckoutProvider implements CheckoutProvider {
     @Override
     @RequiredUIAccess
-    public void doCheckout(@Nonnull final Project project, @Nullable final Listener listener) {
+    public void doCheckout(@Nonnull Project project, @Nullable Listener listener) {
         BasicAction.saveAll();
 
         List<GithubRepo> availableRepos;
@@ -58,7 +59,7 @@ public class GithubCheckoutProvider implements CheckoutProvider {
                 indicator -> GithubUtil.runWithValidAuth(
                     project,
                     indicator,
-                    (ThrowableFunction<GithubAuthData, List<GithubRepo>, IOException>)authData -> GithubApiUtil.getAvailableRepos(authData)
+                    (ThrowableFunction<GithubAuthData, List<GithubRepo>, IOException>) authData -> GithubApiUtil.getAvailableRepos(authData)
                 )
             );
         }
@@ -66,18 +67,18 @@ public class GithubCheckoutProvider implements CheckoutProvider {
             return;
         }
         catch (IOException e) {
-            GithubNotifications.showError(project, "Couldn't get the list of GitHub repositories", e);
+            GithubNotifications.showError(project, LocalizeValue.localizeTODO("Couldn't get the list of GitHub repositories"), e);
             return;
         }
         Collections.sort(
             availableRepos,
             (r1, r2) -> {
-                final int comparedOwners = r1.getUserName().compareTo(r2.getUserName());
+                int comparedOwners = r1.getUserName().compareTo(r2.getUserName());
                 return comparedOwners != 0 ? comparedOwners : r1.getName().compareTo(r2.getName());
             }
         );
 
-        final GitCloneDialog dialog = new GitCloneDialog(project);
+        GitCloneDialog dialog = new GitCloneDialog(project);
         // Add predefined repositories to history
         dialog.prependToHistory("-----------------------------------------------");
         for (int i = availableRepos.size() - 1; i >= 0; i--) {
@@ -88,15 +89,14 @@ public class GithubCheckoutProvider implements CheckoutProvider {
             return;
         }
         dialog.rememberSettings();
-        final VirtualFile destinationParent = LocalFileSystem.getInstance()
-            .findFileByIoFile(new File(dialog.getParentDirectory()));
+        VirtualFile destinationParent = LocalFileSystem.getInstance().findFileByIoFile(new File(dialog.getParentDirectory()));
         if (destinationParent == null) {
             return;
         }
-        final String sourceRepositoryURL = dialog.getSourceRepositoryURL();
-        final String directoryName = dialog.getDirectoryName();
-        final String parentDirectory = dialog.getParentDirectory();
-        final String puttyKey = dialog.getPuttyKeyFile();
+        String sourceRepositoryURL = dialog.getSourceRepositoryURL();
+        String directoryName = dialog.getDirectoryName();
+        String parentDirectory = dialog.getParentDirectory();
+        String puttyKey = dialog.getPuttyKeyFile();
 
         Git git = Git.getInstance();
         GitCheckoutProvider.clone(
@@ -111,6 +111,7 @@ public class GithubCheckoutProvider implements CheckoutProvider {
         );
     }
 
+    @Nonnull
     @Override
     public String getVcsName() {
         return "Git_Hub";

@@ -1,20 +1,22 @@
 package org.jetbrains.plugins.github.tasks;
 
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.task.ui.BaseRepositoryEditor;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.FormBuilder;
 import consulo.ui.ex.awt.GridBag;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.util.lang.StringUtil;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.plugins.github.api.GithubApiUtil;
 import org.jetbrains.plugins.github.exceptions.GithubAuthenticationCanceledException;
 import org.jetbrains.plugins.github.util.GithubNotifications;
 import org.jetbrains.plugins.github.util.GithubUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -36,8 +38,8 @@ public class GithubRepositoryEditor extends BaseRepositoryEditor<GithubRepositor
     private JBLabel myTokenLabel;
 
     public GithubRepositoryEditor(
-        final Project project,
-        final GithubRepository repository,
+        Project project,
+        GithubRepository repository,
         Consumer<GithubRepository> changeListener
     ) {
         super(project, repository, changeListener);
@@ -123,6 +125,7 @@ public class GithubRepositoryEditor extends BaseRepositoryEditor<GithubRepositor
         super.apply();
     }
 
+    @RequiredUIAccess
     private void generateToken() {
         try {
             myToken.setText(GithubUtil.computeValueInModal(
@@ -139,12 +142,12 @@ public class GithubRepositoryEditor extends BaseRepositoryEditor<GithubRepositor
         catch (GithubAuthenticationCanceledException ignore) {
         }
         catch (IOException e) {
-            GithubNotifications.showErrorDialog(myProject, "Can't get access token", e);
+            GithubNotifications.showErrorDialog(myProject, LocalizeValue.localizeTODO("Can't get access token"), e);
         }
     }
 
     @Override
-    public void setAnchor(@Nullable final JComponent anchor) {
+    public void setAnchor(@Nullable JComponent anchor) {
         super.setAnchor(anchor);
         myHostLabel.setAnchor(anchor);
         myRepositoryLabel.setAnchor(anchor);
