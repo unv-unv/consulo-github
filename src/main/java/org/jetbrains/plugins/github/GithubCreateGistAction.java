@@ -15,16 +15,19 @@
  */
 package org.jetbrains.plugins.github;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.github.icon.GitHubIconGroup;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.github.localize.GithubLocalize;
 import consulo.language.file.FileTypeManager;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.project.Project;
@@ -32,9 +35,11 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.change.ChangeListManager;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.plugins.github.api.GithubApiUtil;
 import org.jetbrains.plugins.github.api.GithubGist;
 import org.jetbrains.plugins.github.exceptions.GithubAuthenticationCanceledException;
@@ -43,8 +48,6 @@ import org.jetbrains.plugins.github.util.GithubAuthData;
 import org.jetbrains.plugins.github.util.GithubNotifications;
 import org.jetbrains.plugins.github.util.GithubUtil;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,46 +60,58 @@ import static org.jetbrains.plugins.github.api.GithubGist.FileContent;
  * @author oleg
  * @since 2011-09-27
  */
+@ActionImpl(
+    id = "Github.Create.Gist",
+    parents = {
+        @ActionParentRef(@ActionRef(id = "EditorPopupMenu")),
+        @ActionParentRef(@ActionRef(id = "ProjectViewPopupMenu")),
+        @ActionParentRef(@ActionRef(id = "EditorTabPopupMenu")),
+        @ActionParentRef(@ActionRef(id = "ConsoleEditorPopupMenu"))
+    }
+)
 public class GithubCreateGistAction extends DumbAwareAction {
     private static final Logger LOG = GithubUtil.LOG;
-    private static final String FAILED_TO_CREATE_GIST = "Can't create Gist";
+    private static final LocalizeValue FAILED_TO_CREATE_GIST = LocalizeValue.localizeTODO("Can't create Gist");
 
-    protected GithubCreateGistAction() {
-        super("Create Gist...", "Create GitHub Gist", GitHubIconGroup.github_icon());
+    public GithubCreateGistAction() {
+        super(
+            GithubLocalize.actionCreateGistText(),
+            GithubLocalize.actionCreateGistDescription(),
+            GitHubIconGroup.github_icon()
+        );
     }
 
-    @RequiredUIAccess
     @Override
-    public void update(@Nonnull final AnActionEvent e) {
-        Project project = e.getData(PlatformDataKeys.PROJECT);
+    @RequiredUIAccess
+    public void update(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         if (project == null || project.isDefault()) {
-            e.getPresentation().setVisible(false);
-            e.getPresentation().setEnabled(false);
+            e.getPresentation().setEnabledAndVisible(false);
             return;
         }
-        Editor editor = e.getData(PlatformDataKeys.EDITOR);
-        VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-        VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+        Editor editor = e.getData(Editor.KEY);
+        VirtualFile file = e.getData(VirtualFile.KEY);
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
 
         if ((editor == null && file == null && files == null)
             || (editor != null && editor.getDocument().getTextLength() == 0)) {
-            GithubUtil.setVisibleEnabled(e, false, false);
+            e.getPresentation().setEnabledAndVisible(false);
             return;
         }
-        GithubUtil.setVisibleEnabled(e, true, true);
+        e.getPresentation().setEnabledAndVisible(true);
     }
 
-    @RequiredUIAccess
     @Override
-    public void actionPerformed(@Nonnull final AnActionEvent e) {
-        final Project project = e.getData(PlatformDataKeys.PROJECT);
+    @RequiredUIAccess
+    public void actionPerformed(@Nonnull AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
         if (project == null || project.isDefault()) {
             return;
         }
 
-        final Editor editor = e.getData(PlatformDataKeys.EDITOR);
-        final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-        final VirtualFile[] files = e.getData(PlatformDataKeys.VIRTUAL_FILE_ARRAY);
+        Editor editor = e.getData(Editor.KEY);
+        VirtualFile file = e.getData(VirtualFile.KEY);
+        VirtualFile[] files = e.getData(VirtualFile.KEY_OF_ARRAY);
         if (editor == null && file == null && files == null) {
             return;
         }
@@ -127,14 +142,14 @@ public class GithubCreateGistAction extends DumbAwareAction {
                 return;
             }
             catch (IOException e) {
-                GithubNotifications.showError(project, "Can't create gist", e);
+                GithubNotifications.showError(project, LocalizeValue.localizeTODO("Can't create gist"), e);
                 return;
             }
         }
 
-        final Ref<String> url = new Ref<>();
+        final SimpleReference<String> url = new SimpleReference<>();
         final GithubAuthData finalAuth = auth;
-        new Task.Backgroundable(project, "Creating Gist...") {
+        new Task.Backgroundable(project, LocalizeValue.localizeTODO("Creating Gist...")) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 List<FileContent> contents = collectContents(project, editor, file, files);
@@ -143,8 +158,8 @@ public class GithubCreateGistAction extends DumbAwareAction {
                 url.set(gistUrl);
             }
 
-            @RequiredUIAccess
             @Override
+            @RequiredUIAccess
             public void onSuccess() {
                 if (url.isNull()) {
                     return;
@@ -153,14 +168,19 @@ public class GithubCreateGistAction extends DumbAwareAction {
                     Platform.current().openInBrowser(url.get());
                 }
                 else {
-                    GithubNotifications.showInfoURL(project, "Gist Created Successfully", "Your gist url", url.get());
+                    GithubNotifications.showInfoURL(
+                        project,
+                        LocalizeValue.localizeTODO("Gist Created Successfully"),
+                        "Your gist url",
+                        url.get()
+                    );
                 }
             }
         }.queue();
     }
 
     @Nonnull
-    private static GithubAuthData getValidAuthData(@Nonnull final Project project) throws IOException {
+    private static GithubAuthData getValidAuthData(@Nonnull Project project) throws IOException {
         return GithubUtil.computeValueInModal(
             project,
             "Access to GitHub",
@@ -213,7 +233,7 @@ public class GithubCreateGistAction extends DumbAwareAction {
         @Nullable String filename
     ) {
         if (contents.isEmpty()) {
-            GithubNotifications.showWarning(project, FAILED_TO_CREATE_GIST, "Can't create empty gist");
+            GithubNotifications.showWarning(project, FAILED_TO_CREATE_GIST, LocalizeValue.localizeTODO("Can't create empty gist"));
             return null;
         }
         if (contents.size() == 1 && filename != null) {
@@ -231,14 +251,8 @@ public class GithubCreateGistAction extends DumbAwareAction {
     }
 
     @Nullable
-    private static String getContentFromEditor(@Nonnull final Editor editor) {
-        String text = Application.get().runReadAction(new Computable<String>() {
-            @Nullable
-            @Override
-            public String compute() {
-                return editor.getSelectionModel().getSelectedText();
-            }
-        });
+    private static String getContentFromEditor(@Nonnull Editor editor) {
+        String text = Application.get().runReadAction((Supplier<String>) () -> editor.getSelectionModel().getSelectedText());
 
         if (text == null) {
             text = editor.getDocument().getText();
@@ -252,7 +266,7 @@ public class GithubCreateGistAction extends DumbAwareAction {
 
     @Nonnull
     private static List<FileContent> getContentFromFile(
-        @Nonnull final VirtualFile file,
+        @Nonnull VirtualFile file,
         @Nonnull Project project,
         @Nullable String prefix
     ) {
@@ -260,7 +274,7 @@ public class GithubCreateGistAction extends DumbAwareAction {
             return getContentFromDirectory(file, project, prefix);
         }
         Document document = Application.get()
-            .runReadAction((Supplier<Document>)() -> FileDocumentManager.getInstance().getDocument(file));
+            .runReadAction((Supplier<Document>) () -> FileDocumentManager.getInstance().getDocument(file));
         String content;
         if (document != null) {
             content = document.getText();
@@ -269,7 +283,11 @@ public class GithubCreateGistAction extends DumbAwareAction {
             content = readFile(file);
         }
         if (content == null) {
-            GithubNotifications.showWarning(project, FAILED_TO_CREATE_GIST, "Couldn't read the contents of the file " + file);
+            GithubNotifications.showWarning(
+                project,
+                FAILED_TO_CREATE_GIST,
+                LocalizeValue.localizeTODO("Couldn't read the contents of the file " + file)
+            );
             return Collections.emptyList();
         }
         if (StringUtil.isEmptyOrSpaces(content)) {
@@ -296,29 +314,28 @@ public class GithubCreateGistAction extends DumbAwareAction {
     }
 
     @Nullable
-    private static String readFile(@Nonnull final VirtualFile file) {
-        return Application.get().runReadAction(new Computable<String>() {
-            @Nullable
-            @Override
-            public String compute() {
-                try {
-                    return new String(file.contentsToByteArray(), file.getCharset());
-                }
-                catch (IOException e) {
-                    LOG.info("Couldn't read contents of the file " + file, e);
-                    return null;
-                }
+    private static String readFile(@Nonnull VirtualFile file) {
+        return Application.get().runReadAction((Supplier<String>) () -> {
+            try {
+                return new String(file.contentsToByteArray(), file.getCharset());
+            }
+            catch (IOException e) {
+                LOG.info("Couldn't read contents of the file " + file, e);
+                return null;
             }
         });
     }
 
     private static String addPrefix(@Nonnull String name, @Nullable String prefix, boolean addTrailingSlash) {
-        String pref = prefix == null ? "" : prefix;
-        pref += name;
-        if (addTrailingSlash) {
-            pref += "_";
+        StringBuilder sb = new StringBuilder();
+        if (prefix != null) {
+            sb.append(prefix);
         }
-        return pref;
+        sb.append(name);
+        if (addTrailingSlash) {
+            sb.append('_');
+        }
+        return sb.toString();
     }
 
     private static boolean isFileIgnored(@Nonnull VirtualFile file, @Nonnull Project project) {

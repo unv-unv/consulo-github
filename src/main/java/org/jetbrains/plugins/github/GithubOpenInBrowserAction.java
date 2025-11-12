@@ -21,7 +21,7 @@ import consulo.annotation.component.ActionRef;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.github.icon.GitHubIconGroup;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -36,32 +36,33 @@ import git4idea.GitRemoteBranch;
 import git4idea.GitUtil;
 import git4idea.repo.GitRepository;
 import git4idea.repo.GitRepositoryManager;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import org.jetbrains.plugins.github.util.GithubNotifications;
 import org.jetbrains.plugins.github.util.GithubUrlUtil;
 import org.jetbrains.plugins.github.util.GithubUtil;
-
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 
 /**
  * @author oleg
  * @since 2010-12-10
  */
-@ActionImpl(id = "Github.Open.In.Browser", parents = {
-    @ActionParentRef(@ActionRef(id = "RevealGroup")),
-})
+@ActionImpl(id = "Github.Open.In.Browser", parents = @ActionParentRef(@ActionRef(id = "RevealGroup")))
 public class GithubOpenInBrowserAction extends DumbAwareAction {
-    public static final String CANNOT_OPEN_IN_BROWSER = "Cannot open in browser";
+    public static final LocalizeValue CANNOT_OPEN_IN_BROWSER = LocalizeValue.localizeTODO("Cannot open in browser");
 
     public GithubOpenInBrowserAction() {
-        super("GitHub", "Open corresponding link in browser", GitHubIconGroup.github_icon());
+        super(
+            LocalizeValue.localizeTODO("GitHub"),
+            LocalizeValue.localizeTODO("Open corresponding link in browser"),
+            GitHubIconGroup.github_icon()
+        );
     }
 
     @Override
     @RequiredUIAccess
-    public void update(final AnActionEvent e) {
-        Project project = e.getData(PlatformDataKeys.PROJECT);
-        VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+    public void update(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        VirtualFile virtualFile = e.getData(VirtualFile.KEY);
         Presentation presentation = e.getPresentation();
         if (project == null || project.isDefault() || virtualFile == null) {
             presentation.setEnabledAndVisible(false);
@@ -69,7 +70,7 @@ public class GithubOpenInBrowserAction extends DumbAwareAction {
         }
         GitRepositoryManager manager = GitUtil.getRepositoryManager(project);
 
-        final GitRepository gitRepository = manager.getRepositoryForFile(virtualFile);
+        GitRepository gitRepository = manager.getRepositoryForFile(virtualFile);
         if (gitRepository == null) {
             presentation.setEnabledAndVisible(false);
             return;
@@ -99,10 +100,10 @@ public class GithubOpenInBrowserAction extends DumbAwareAction {
 
     @Override
     @RequiredUIAccess
-    public void actionPerformed(final AnActionEvent e) {
-        final Project project = e.getData(PlatformDataKeys.PROJECT);
-        final VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-        final Editor editor = e.getData(PlatformDataKeys.EDITOR);
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getData(Project.KEY);
+        VirtualFile virtualFile = e.getData(VirtualFile.KEY);
+        Editor editor = e.getData(Editor.KEY);
         if (virtualFile == null || project == null || project.isDisposed()) {
             return;
         }
@@ -122,29 +123,38 @@ public class GithubOpenInBrowserAction extends DumbAwareAction {
     ) {
 
         GitRepositoryManager manager = GitUtil.getRepositoryManager(project);
-        final GitRepository repository = manager.getRepositoryForFile(virtualFile);
+        GitRepository repository = manager.getRepositoryForFile(virtualFile);
         if (repository == null) {
             if (!quiet) {
-                StringBuilder details = new StringBuilder("file: " + virtualFile.getPresentableUrl() + "; Git " +
-                    "repositories: ");
+                StringBuilder details = new StringBuilder("file: " + virtualFile.getPresentableUrl() + "; Git repositories: ");
                 for (GitRepository repo : manager.getRepositories()) {
                     details.append(repo.getPresentableUrl()).append("; ");
                 }
-                showError(project, "Can't find git repository", details.toString(), quiet);
+                showError(
+                    project,
+                    LocalizeValue.localizeTODO("Can't find git repository"),
+                    details.toString(),
+                    quiet
+                );
             }
             return null;
         }
 
-        final String githubRemoteUrl = GithubUtil.findGithubRemoteUrl(repository);
+        String githubRemoteUrl = GithubUtil.findGithubRemoteUrl(repository);
         if (githubRemoteUrl == null) {
-            showError(project, "Can't find github remote", null, quiet);
+            showError(project, LocalizeValue.localizeTODO("Can't find github remote"), quiet);
             return null;
         }
 
-        final String rootPath = repository.getRoot().getPath();
-        final String path = virtualFile.getPath();
+        String rootPath = repository.getRoot().getPath();
+        String path = virtualFile.getPath();
         if (!path.startsWith(rootPath)) {
-            showError(project, "File is not under repository root", "Root: " + rootPath + ", file: " + path, quiet);
+            showError(
+                project,
+                LocalizeValue.localizeTODO("File is not under repository root"),
+                "Root: " + rootPath + ", file: " + path,
+                quiet
+            );
             return null;
         }
 
@@ -156,7 +166,7 @@ public class GithubOpenInBrowserAction extends DumbAwareAction {
         String relativePath = path.substring(rootPath.length());
         String urlToOpen = makeUrlToOpen(editor, relativePath, branch, githubRemoteUrl);
         if (urlToOpen == null) {
-            showError(project, "Can't create properly url", githubRemoteUrl, quiet);
+            showError(project, LocalizeValue.localizeTODO("Can't create properly url"), githubRemoteUrl, quiet);
             return null;
         }
 
@@ -170,8 +180,8 @@ public class GithubOpenInBrowserAction extends DumbAwareAction {
         @Nonnull String branch,
         @Nonnull String githubRemoteUrl
     ) {
-        final StringBuilder builder = new StringBuilder();
-        final String githubRepoUrl = GithubUrlUtil.makeGithubRepoUrlFromRemoteUrl(githubRemoteUrl);
+        StringBuilder builder = new StringBuilder();
+        String githubRepoUrl = GithubUrlUtil.makeGithubRepoUrlFromRemoteUrl(githubRemoteUrl);
         if (githubRepoUrl == null) {
             return null;
         }
@@ -180,8 +190,8 @@ public class GithubOpenInBrowserAction extends DumbAwareAction {
         if (editor != null && editor.getDocument().getLineCount() >= 1) {
             // lines are counted internally from 0, but from 1 on github
             SelectionModel selectionModel = editor.getSelectionModel();
-            final int begin = editor.getDocument().getLineNumber(selectionModel.getSelectionStart()) + 1;
-            final int selectionEnd = selectionModel.getSelectionEnd();
+            int begin = editor.getDocument().getLineNumber(selectionModel.getSelectionStart()) + 1;
+            int selectionEnd = selectionModel.getSelectionEnd();
             int end = editor.getDocument().getLineNumber(selectionEnd) + 1;
             if (editor.getDocument().getLineStartOffset(end - 1) == selectionEnd) {
                 end -= 1;
@@ -202,8 +212,7 @@ public class GithubOpenInBrowserAction extends DumbAwareAction {
         if (currentBranch == null) {
             showError(
                 project,
-                "Can't open the file on GitHub when repository is on detached HEAD. Please checkout a branch.",
-                null,
+                LocalizeValue.localizeTODO("Can't open the file on GitHub when repository is on detached HEAD. Please checkout a branch."),
                 quiet
             );
             return null;
@@ -213,7 +222,7 @@ public class GithubOpenInBrowserAction extends DumbAwareAction {
         if (tracked == null) {
             showError(
                 project,
-                "Can't open the file on GitHub when current branch doesn't have a tracked branch.",
+                LocalizeValue.localizeTODO("Can't open the file on GitHub when current branch doesn't have a tracked branch."),
                 "Current branch: " + currentBranch + ", tracked info: " + repository.getBranchTrackInfos(),
                 quiet
             );
@@ -225,7 +234,17 @@ public class GithubOpenInBrowserAction extends DumbAwareAction {
 
     private static void showError(
         @Nonnull Project project,
-        @Nonnull String message,
+        @Nonnull LocalizeValue message,
+        boolean quiet
+    ) {
+        if (!quiet) {
+            GithubNotifications.showError(project, CANNOT_OPEN_IN_BROWSER, message);
+        }
+    }
+
+    private static void showError(
+        @Nonnull Project project,
+        @Nonnull LocalizeValue message,
         @Nullable String details,
         boolean quiet
     ) {

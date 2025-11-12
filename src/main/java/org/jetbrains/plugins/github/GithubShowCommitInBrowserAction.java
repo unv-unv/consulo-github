@@ -16,6 +16,7 @@
 package org.jetbrains.plugins.github;
 
 import consulo.github.icon.GitHubIconGroup;
+import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -31,7 +32,11 @@ import org.jetbrains.plugins.github.util.GithubUtil;
  */
 abstract class GithubShowCommitInBrowserAction extends DumbAwareAction {
     public GithubShowCommitInBrowserAction() {
-        super("Open on GitHub", "Open the selected commit in browser", GitHubIconGroup.github_icon());
+        super(
+            LocalizeValue.localizeTODO("Open on GitHub"),
+            LocalizeValue.localizeTODO("Open the selected commit in browser"),
+            GitHubIconGroup.github_icon()
+        );
     }
 
     protected static void openInBrowser(Project project, GitRepository repository, String revisionHash) {
@@ -49,7 +54,7 @@ abstract class GithubShowCommitInBrowserAction extends DumbAwareAction {
             GithubNotifications.showError(
                 project,
                 GithubOpenInBrowserAction.CANNOT_OPEN_IN_BROWSER,
-                "Cannot extract info about repository: " + url
+                LocalizeValue.localizeTODO("Cannot extract info about repository: " + url)
             );
             return;
         }

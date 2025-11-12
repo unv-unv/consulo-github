@@ -17,7 +17,6 @@ package org.jetbrains.plugins.github;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -66,8 +65,7 @@ public class GithubShowCommitInBrowserFromAnnotateAction extends GithubShowCommi
             return;
         }
 
-        final VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(eventData.getCorrectedLineNumber
-            ());
+        VcsRevisionNumber revisionNumber = myAnnotation.getLineRevisionNumber(eventData.getCorrectedLineNumber());
         if (revisionNumber != null) {
             openInBrowser(eventData.getProject(), eventData.getRepository(), revisionNumber.asString());
         }
@@ -75,8 +73,8 @@ public class GithubShowCommitInBrowserFromAnnotateAction extends GithubShowCommi
 
     @Nullable
     private static EventData calcData(AnActionEvent e, int lineNumber) {
-        Project project = e.getData(PlatformDataKeys.PROJECT);
-        VirtualFile virtualFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+        Project project = e.getData(Project.KEY);
+        VirtualFile virtualFile = e.getData(VirtualFile.KEY);
         if (project == null || virtualFile == null) {
             return null;
         }
@@ -84,10 +82,7 @@ public class GithubShowCommitInBrowserFromAnnotateAction extends GithubShowCommi
         if (document == null) {
             return null;
         }
-        final UpToDateLineNumberProvider myGetUpToDateLineNumber = UpToDateLineNumberProvider.of(
-            document,
-            project
-        );
+        UpToDateLineNumberProvider myGetUpToDateLineNumber = UpToDateLineNumberProvider.of(document, project);
         int corrected = myGetUpToDateLineNumber.getLineNumber(lineNumber);
 
         GitRepository repository = GitUtil.getRepositoryManager(project).getRepositoryForFile(virtualFile);

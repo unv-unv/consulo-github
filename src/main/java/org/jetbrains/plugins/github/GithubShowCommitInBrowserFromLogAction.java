@@ -15,6 +15,9 @@
  */
 package org.jetbrains.plugins.github;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
@@ -25,8 +28,15 @@ import git4idea.repo.GitRepository;
 import org.jetbrains.plugins.github.util.GithubUtil;
 
 import jakarta.annotation.Nonnull;
+
 import java.util.List;
 
+@ActionImpl(
+    id = "Github.Open.Commit.In.Browser",
+    parents = {
+        @ActionParentRef(@ActionRef(id = "Git.Log.ContextMenu"))
+    }
+)
 public class GithubShowCommitInBrowserFromLogAction extends GithubShowCommitInBrowserAction {
     @Override
     @RequiredUIAccess

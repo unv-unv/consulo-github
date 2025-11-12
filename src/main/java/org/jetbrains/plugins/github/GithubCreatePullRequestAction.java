@@ -15,11 +15,13 @@
  */
 package org.jetbrains.plugins.github;
 
+import consulo.annotation.component.ActionImpl;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.github.icon.GitHubIconGroup;
-import consulo.language.editor.PlatformDataKeys;
+import consulo.github.localize.GithubLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
@@ -33,7 +35,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.versionControlSystem.VcsException;
 import consulo.versionControlSystem.change.Change;
 import consulo.versionControlSystem.change.ChangesBrowser;
@@ -67,48 +69,51 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static org.jetbrains.plugins.github.util.GithubUtil.setVisibleEnabled;
-
 /**
  * @author Aleksey Pivovarov
  */
+@ActionImpl(id = "Github.Create.Pull.Request")
 public class GithubCreatePullRequestAction extends DumbAwareAction {
     private static final Logger LOG = GithubUtil.LOG;
-    private static final String CANNOT_CREATE_PULL_REQUEST = "Can't create pull request";
+    private static final LocalizeValue CANNOT_CREATE_PULL_REQUEST = LocalizeValue.localizeTODO("Can't create pull request");
 
     public GithubCreatePullRequestAction() {
-        super("Create Pull Request", "Create pull request from current branch", GitHubIconGroup.github_icon());
+        super(
+            GithubLocalize.actionCreatePullRequestText(),
+            GithubLocalize.actionCreatePullRequestDescription(),
+            GitHubIconGroup.github_icon()
+        );
     }
 
     @Override
     @RequiredUIAccess
     public void update(AnActionEvent e) {
-        final Project project = e.getData(PlatformDataKeys.PROJECT);
-        final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+        Project project = e.getData(Project.KEY);
+        VirtualFile file = e.getData(VirtualFile.KEY);
         if (project == null || project.isDefault()) {
-            setVisibleEnabled(e, false, false);
+            e.getPresentation().setEnabledAndVisible(false);
             return;
         }
 
-        final GitRepository gitRepository = GithubUtil.getGitRepository(project, file);
+        GitRepository gitRepository = GithubUtil.getGitRepository(project, file);
         if (gitRepository == null) {
-            setVisibleEnabled(e, false, false);
+            e.getPresentation().setEnabledAndVisible(false);
             return;
         }
 
         if (!GithubUtil.isRepositoryOnGitHub(gitRepository)) {
-            setVisibleEnabled(e, false, false);
+            e.getPresentation().setEnabledAndVisible(false);
             return;
         }
 
-        setVisibleEnabled(e, true, true);
+        e.getPresentation().setEnabledAndVisible(true);
     }
 
     @Override
     @RequiredUIAccess
     public void actionPerformed(AnActionEvent e) {
-        final Project project = e.getData(PlatformDataKeys.PROJECT);
-        final VirtualFile file = e.getData(PlatformDataKeys.VIRTUAL_FILE);
+        Project project = e.getData(Project.KEY);
+        VirtualFile file = e.getData(VirtualFile.KEY);
 
         if (project == null || project.isDisposed() || !GithubUtil.testGitExecutable(project)) {
             return;
@@ -118,19 +123,19 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
     }
 
     @RequiredUIAccess
-    static void createPullRequest(@Nonnull final Project project, @Nullable final VirtualFile file) {
+    static void createPullRequest(@Nonnull final Project project, @Nullable VirtualFile file) {
         final Git git = Git.getInstance();
 
         final GitRepository repository = GithubUtil.getGitRepository(project, file);
         if (repository == null) {
-            GithubNotifications.showError(project, CANNOT_CREATE_PULL_REQUEST, "Can't find git repository");
+            GithubNotifications.showError(project, CANNOT_CREATE_PULL_REQUEST, LocalizeValue.localizeTODO("Can't find git repository"));
             return;
         }
         repository.update();
 
-        final Pair<GitRemote, String> remote = GithubUtil.findGithubRemote(repository);
+        Pair<GitRemote, String> remote = GithubUtil.findGithubRemote(repository);
         if (remote == null) {
-            GithubNotifications.showError(project, CANNOT_CREATE_PULL_REQUEST, "Can't find GitHub remote");
+            GithubNotifications.showError(project, CANNOT_CREATE_PULL_REQUEST, LocalizeValue.localizeTODO("Can't find GitHub remote"));
             return;
         }
         final String remoteUrl = remote.getSecond();
@@ -140,15 +145,19 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
         final GithubFullPath upstreamUserAndRepo = upstreamUrl == null || !GithubUrlUtil.isGithubUrl(upstreamUrl) ?
             null : GithubUrlUtil.getUserAndRepositoryFromRemoteUrl(upstreamUrl);
 
-        final GithubFullPath userAndRepo = GithubUrlUtil.getUserAndRepositoryFromRemoteUrl(remoteUrl);
+        GithubFullPath userAndRepo = GithubUrlUtil.getUserAndRepositoryFromRemoteUrl(remoteUrl);
         if (userAndRepo == null) {
-            GithubNotifications.showError(project, CANNOT_CREATE_PULL_REQUEST, "Can't process remote: " + remoteUrl);
+            GithubNotifications.showError(
+                project,
+                CANNOT_CREATE_PULL_REQUEST,
+                LocalizeValue.localizeTODO("Can't process remote: " + remoteUrl)
+            );
             return;
         }
 
         final GitLocalBranch currentBranch = repository.getCurrentBranch();
         if (currentBranch == null) {
-            GithubNotifications.showError(project, CANNOT_CREATE_PULL_REQUEST, "No current branch");
+            GithubNotifications.showError(project, CANNOT_CREATE_PULL_REQUEST, LocalizeValue.localizeTODO("No current branch"));
             return;
         }
 
@@ -162,6 +171,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
         GithubRepo parent = info.getRepo().getParent();
         String suggestedBranch = parent == null ? null : parent.getUserName() + ":" + parent.getDefaultBranch();
         Collection<String> suggestions = ContainerUtil.map(branches, RemoteBranch::getReference);
+        @RequiredUIAccess
         Consumer<String> showDiff = s -> showDiffByRef(project, s, branches, repository, currentBranch.getName());
         final GithubCreatePullRequestDialog dialog = new GithubCreatePullRequestDialog(project, suggestions, suggestedBranch, showDiff);
         DialogManager.show(dialog);
@@ -169,15 +179,17 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
             return;
         }
 
-        new Task.Backgroundable(project, "Creating pull request...") {
+        new Task.Backgroundable(project, LocalizeValue.localizeTODO("Creating pull request...")) {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 LOG.info("Pushing current branch");
-                indicator.setText("Pushing current branch...");
+                indicator.setTextValue(LocalizeValue.localizeTODO("Pushing current branch..."));
                 GitCommandResult result = git.push(repository, remoteName, remoteUrl, puttyKey, currentBranch.getName(), true);
                 if (!result.success()) {
-                    GithubNotifications.showError(project, CANNOT_CREATE_PULL_REQUEST,
-                        "Push failed:<br/>" + result.getErrorOutputAsHtmlString()
+                    GithubNotifications.showError(
+                        project,
+                        CANNOT_CREATE_PULL_REQUEST,
+                        LocalizeValue.localizeTODO("Push failed:<br/>" + result.getErrorOutputAsHtmlString())
                     );
                     return;
                 }
@@ -191,13 +203,13 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
                     GithubNotifications.showError(
                         project,
                         CANNOT_CREATE_PULL_REQUEST,
-                        "Can't find repository for specified branch: " + onto
+                        LocalizeValue.localizeTODO("Can't find repository for specified branch: " + onto)
                     );
                     return;
                 }
 
                 LOG.info("Creating pull request");
-                indicator.setText("Creating pull request...");
+                indicator.setTextValue(LocalizeValue.localizeTODO("Creating pull request..."));
                 GithubPullRequest request =
                     createPullRequest(project, auth, targetRepo, dialog.getRequestTitle(), dialog.getDescription(), from, onto);
                 if (request == null) {
@@ -206,7 +218,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
 
                 GithubNotifications.showInfoURL(
                     project,
-                    "Successfully created pull request",
+                    LocalizeValue.localizeTODO("Successfully created pull request"),
                     "Pull Request #" + request.getNumber(),
                     request.getHtmlUrl()
                 );
@@ -217,14 +229,14 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
     @Nullable
     @RequiredUIAccess
     private static GithubInfo loadGithubInfoWithModal(
-        @Nonnull final Project project,
-        @Nonnull final GithubFullPath userAndRepo,
-        @Nullable final GithubFullPath upstreamUserAndRepo
+        @Nonnull Project project,
+        @Nonnull GithubFullPath userAndRepo,
+        @Nullable GithubFullPath upstreamUserAndRepo
     ) {
         try {
             return GithubUtil.computeValueInModal(project, "Access to GitHub", indicator -> {
-                final Ref<GithubRepoDetailed> reposRef = new Ref<>();
-                final GithubAuthData auth = GithubUtil.runAndGetValidAuth(
+                SimpleReference<GithubRepoDetailed> reposRef = new SimpleReference<>();
+                GithubAuthData auth = GithubUtil.runAndGetValidAuth(
                     project,
                     indicator,
                     authData -> reposRef.set(GithubApiUtil.getDetailedRepoInfo(
@@ -346,15 +358,15 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
 
     @Nonnull
     private static List<RemoteBranch> loadAvailableBranchesFromGithub(
-        @Nonnull final Project project,
-        @Nonnull final GithubAuthData auth,
-        @Nonnull final GithubRepoDetailed repo,
-        @Nullable final GithubFullPath upstreamPath
+        @Nonnull Project project,
+        @Nonnull GithubAuthData auth,
+        @Nonnull GithubRepoDetailed repo,
+        @Nullable GithubFullPath upstreamPath
     ) {
         List<RemoteBranch> result = new ArrayList<>();
         try {
-            final GithubRepo parent = repo.getParent();
-            final GithubRepo source = repo.getSource();
+            GithubRepo parent = repo.getParent();
+            GithubRepo source = repo.getSource();
 
             if (parent != null) {
                 result.addAll(getBranches(auth, parent.getUserName(), parent.getName()));
@@ -373,7 +385,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
             }
         }
         catch (IOException e) {
-            GithubNotifications.showError(project, "Can't load available branches", e);
+            GithubNotifications.showError(project, LocalizeValue.localizeTODO("Can't load available branches"), e);
         }
         return result;
     }
@@ -381,8 +393,8 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
     @Nonnull
     private static List<RemoteBranch> getBranches(
         @Nonnull GithubAuthData auth,
-        @Nonnull final String user,
-        @Nonnull final String repo
+        @Nonnull String user,
+        @Nonnull String repo
     ) throws IOException {
         List<GithubBranch> branches = GithubApiUtil.getRepoBranches(auth, user, repo);
         return ContainerUtil.map(branches, branch -> new RemoteBranch(user, branch.getName(), repo));
@@ -406,14 +418,22 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
     ) {
         RemoteBranch branch = findRemoteBranch(branches, ref);
         if (branch == null || branch.getLocalBranch() == null) {
-            GithubNotifications.showErrorDialog(project, "Can't show diff", "Can't find local branch");
+            GithubNotifications.showErrorDialog(
+                project,
+                LocalizeValue.localizeTODO("Can't show diff"),
+                LocalizeValue.localizeTODO("Can't find local branch")
+            );
             return;
         }
         String targetBranch = branch.getLocalBranch();
 
         DiffInfo info = getDiffInfo(project, gitRepository, currentBranch, targetBranch);
         if (info == null) {
-            GithubNotifications.showErrorDialog(project, "Can't show diff", "Can't get diff info");
+            GithubNotifications.showErrorDialog(
+                project,
+                LocalizeValue.localizeTODO("Can't show diff"),
+                LocalizeValue.localizeTODO("Can't get diff info")
+            );
             return;
         }
 
@@ -442,10 +462,10 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
 
     @Nullable
     private static DiffInfo getDiffInfo(
-        @Nonnull final Project project,
-        @Nonnull final GitRepository repository,
-        @Nonnull final String currentBranch,
-        @Nonnull final String targetBranch
+        @Nonnull Project project,
+        @Nonnull GitRepository repository,
+        @Nonnull String currentBranch,
+        @Nonnull String targetBranch
     ) {
         try {
             return GithubUtil.computeValueInModal(project, "Access to Git", indicator -> {
@@ -472,12 +492,13 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
             super(project, false);
             myProject = project;
             myInfo = info;
-            setTitle(String.format("Comparing %s with %s", info.getFrom(), info.getTo()));
+            setTitle(LocalizeValue.localizeTODO(String.format("Comparing %s with %s", info.getFrom(), info.getTo())));
             setModal(false);
             init();
         }
 
         @Override
+        @RequiredUIAccess
         protected JComponent createCenterPanel() {
             myLogPanel = new GithubCreatePullRequestLogPanel(myProject, myInfo);
             JPanel diffPanel = new GithubCreatePullRequestDiffPanel(myProject, myInfo);
@@ -516,8 +537,17 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
             List<Change> diff = new ArrayList<>(myInfo.getDiff());
             ChangesBrowserFactory browserFactory = Application.get().getInstance(ChangesBrowserFactory.class);
 
-            final ChangesBrowser changesBrowser =
-                browserFactory.createChangeBrowser(myProject, null, diff, null, false, true, null, ChangesBrowser.MyUseCase.COMMITTED_CHANGES, null);
+            ChangesBrowser changesBrowser = browserFactory.createChangeBrowser(
+                myProject,
+                null,
+                diff,
+                null,
+                false,
+                true,
+                null,
+                ChangesBrowser.MyUseCase.COMMITTED_CHANGES,
+                null
+            );
             changesBrowser.setChangesToDisplay(diff);
             return changesBrowser.getComponent();
         }
@@ -539,7 +569,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
 
         private JComponent createCenterPanel() {
             ChangesBrowserFactory browserFactory = Application.get().getInstance(ChangesBrowserFactory.class);
-            final ChangesBrowser<Change> changesBrowser = browserFactory.createChangeBrowser(
+            ChangesBrowser<Change> changesBrowser = browserFactory.createChangeBrowser(
                 myProject,
                 null,
                 Collections.emptyList(),
@@ -568,7 +598,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
 
         private static void addSelectionListener(
             @Nonnull GitCommitListPanel sourcePanel,
-            @Nonnull final ChangesBrowser<Change> changesBrowser
+            @Nonnull ChangesBrowser<Change> changesBrowser
         ) {
             sourcePanel.addListSelectionListener(commit -> changesBrowser.setChangesToDisplay(new ArrayList<>(commit.getChanges())));
         }

@@ -17,6 +17,7 @@ package org.jetbrains.plugins.github.ui;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -59,7 +60,7 @@ public class GithubSettingsPanel {
 
     private boolean myCredentialsModified;
 
-    public GithubSettingsPanel(@Nonnull final GithubSettings settings) {
+    public GithubSettingsPanel(@Nonnull GithubSettings settings) {
         mySettings = settings;
         myInfoPanel.add(new JBLabel("Do not have an account at github.com?"));
         HyperlinkLabel signUpLink = new HyperlinkLabel("Sign up");
@@ -72,8 +73,7 @@ public class GithubSettingsPanel {
             Platform.current().openInBrowser(url);
         });
         
-        myTestButton.addActionListener(e -> {
-            new Task.Modal(null, "Checking...", myPane, false) {
+        myTestButton.addActionListener(e -> new Task.Modal(null, LocalizeValue.localizeTODO("Checking..."), myPane, false) {
                 private GithubUser myUser;
                 private Exception myError;
 
@@ -87,8 +87,8 @@ public class GithubSettingsPanel {
                     }
                 }
 
-                @RequiredUIAccess
                 @Override
+                @RequiredUIAccess
                 public void onSuccess() {
                     if (myUser != null) {
                         if (GithubAuthData.AuthType.TOKEN.equals(getAuthType())) {
@@ -100,21 +100,20 @@ public class GithubSettingsPanel {
                     } else if (myError instanceof GithubAuthenticationException ex) {
                         GithubNotifications.showErrorDialog(
                             myPane,
-                            "Login Failure",
-                            "Can't login using given credentials: " + ex.getMessage()
+                            LocalizeValue.localizeTODO("Login Failure"),
+                            LocalizeValue.localizeTODO("Can't login using given credentials: " + ex.getMessage())
                         );
                     } else if (myError instanceof IOException ioEx) {
                         LOG.warn(ioEx);
 
                         GithubNotifications.showErrorDialog(
                             myPane,
-                            "Login Failure",
-                            "Can't login: " + GithubUtil.getErrorTextFromException(ioEx)
+                            LocalizeValue.localizeTODO("Login Failure"),
+                            LocalizeValue.localizeTODO("Can't login: " + GithubUtil.getErrorTextFromException(ioEx))
                         );
                     }
                 }
-            }.queue();
-        });
+            }.queue());
 
         myTokenField.getDocument().addDocumentListener(new DocumentAdapter() {
             @Override
@@ -149,7 +148,7 @@ public class GithubSettingsPanel {
         return myHostTextField.getText().trim();
     }
 
-    public void setHost(@Nonnull final String host) {
+    public void setHost(@Nonnull String host) {
         myHostTextField.setText(host);
     }
 

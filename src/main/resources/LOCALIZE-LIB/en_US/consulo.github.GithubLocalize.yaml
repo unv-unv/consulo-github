@@ -1,0 +1,676 @@
+account.choose.as.default:
+    text: Set as default account for current project
+account.choose.button:
+    text: Choose
+account.choose.for:
+    text: 'Choose GitHub account for: {0}'
+account.choose.not.selected:
+    text: Account is not selected
+account.choose.title:
+    text: Choose GitHub Account
+accounts.add.button:
+    text: Add Account
+accounts.add.dropdown.link:
+    text: Add account
+accounts.default.missing:
+    text: Missing default GitHub account
+accounts.relogin:
+    text: Re-Login
+action.GitHub.Timeline.DeleteMergedBranch.description:
+    text: Delete the merged branch on GitHub
+action.GitHub.Timeline.DeleteMergedBranch.text:
+    text: Delete Branch
+action.Github.Accounts.AddGHAccount.text:
+    text: Log In via GitHub…
+action.Github.Accounts.AddGHAccountWithToken.text:
+    text: Log In with Token…
+action.Github.Accounts.AddGHEAccount.text:
+    text: Log In to GitHub Enterprise…
+action.Github.Add.Account.synonym:
+    text: Add GitHub Account
+action.Github.Clone.MainMenu.text:
+    text: Clone Repository…
+action.Github.Clone.popup.GoToAction.text:
+    text: Clone Repository…
+action.Github.Clone.text:
+    text: Clone Repository from GitHub…
+action.Github.Create.Pull.Request.synonym1:
+    text: New Pull Request/Merge Request/Code Review
+action.Github.Create.Pull.Request.synonym2:
+    text: Start Pull Request/Merge Request/Code Review
+action.Github.Create.Pull.Request.synonym3:
+    text: Create Merge Request/Code Review
+action.Github.Open.Settings.MainMenu.text:
+    text: Manage Accounts…
+action.Github.Open.Settings.popup.GoToAction.text:
+    text: Manage Accounts…
+action.Github.Open.Settings.text:
+    text: Manage GitHub Accounts…
+action.Github.Pull.Request.Branch.Update.text:
+    text: Update to Enable Review Mode…
+action.Github.Pull.Request.Review.In.Editor.Toggle.text:
+    text: Review Mode
+action.Github.Pull.Request.Show.In.Toolwindow.text:
+    text: Show Pull Request in the Tool Window
+action.Github.PullRequest.Changed.MarkViewed.Toggle.text:
+    text: Toggle viewed/not viewed state
+action.Github.PullRequest.Copy.Link.text:
+    text: Copy Pull Request URL
+action.Github.PullRequest.Open.Link.synonym:
+    text: Open Pull Request in GitHub
+action.Github.PullRequest.Open.Link.text:
+    text: View Pull Request in Browser
+action.Github.Share.Vcs.Toolbar.Widget.text:
+    text: GitHub…
+action.Github.Share.description:
+    text: Create a repository on GitHub and push your commits there
+action.Github.Share.text:
+    text: Share Project on GitHub
+action.Github.View.Pull.Request.synonym1:
+    text: View Merge Requests/Code Reviews
+action.Github.View.Pull.Request.text:
+    text: View Pull Requests
+action.comment.text:
+    text: Comment
+action.create.gist.description:
+    text: Create GitHub gist
+action.create.gist.text:
+    text: Create Gist…
+action.create.pull.request.description:
+    text: Create pull request from the current branch
+action.create.pull.request.text:
+    text: Create Pull Request…
+action.sync.fork.description:
+    text: Rebase your GitHub forked repository relative to the origin
+action.sync.fork.text:
+    text: Sync Fork
+button.use.token:
+    text: Use Token…
+cannot.configure.remote:
+    text: |-
+        Can''t configure ''{0}'' remote:
+        {1}
+cannot.create.gist:
+    text: Can't create Gist
+cannot.display.item:
+    text: Cannot display item - {0}
+cannot.load.changes:
+    text: Can't load changes
+cannot.load.commits:
+    text: Can't load commits
+cannot.load.data:
+    text: Can't load data
+cannot.load.details:
+    text: Can't load details
+cannot.load.repo.info:
+    text: Can't load repository info
+create.gist.dialog.copy.url:
+    text: Copy URL
+create.gist.dialog.create.for.field:
+    text: 'Create for:'
+create.gist.dialog.description.field:
+    text: 'Description:'
+create.gist.dialog.filename.field:
+    text: 'Filename:'
+create.gist.dialog.open.browser:
+    text: View in browser
+create.gist.dialog.secret:
+    text: Secret
+create.gist.dialog.title:
+    text: Create Gist
+create.gist.error.binary.file:
+    text: 'Cannot upload binary file: {0}'
+create.gist.error.content.read:
+    text: Could not read the contents of the file {0}
+create.gist.error.empty:
+    text: Cannot create empty gist
+create.gist.process:
+    text: Creating gist…
+create.gist.success:
+    text: Gist created successfully
+credentials.button.generate:
+    text: Generate…
+credentials.incorrect:
+    text: |-
+        Incorrect credentials.
+        {0}
+credentials.invalid.auth.data:
+    text: |-
+        Invalid authentication data.
+        {0}
+credentials.invalid.server.path:
+    text: Invalid server path
+credentials.server.cannot.be.empty:
+    text: Server cannot be empty
+credentials.server.field:
+    text: 'Server:'
+credentials.server.path.invalid:
+    text: Server URL is not valid
+credentials.token.field:
+    text: 'Token:'
+dialog.message.account.cannot.be.empty:
+    text: Account cannot be empty
+dialog.message.login.to.continue:
+    text: Log in to GitHub to continue
+dialog.title.add.github.account:
+    text: Add GitHub Account
+github.actions.action.file.json.schema:
+    text: GitHub Action JSON Schema
+github.actions.file.promo.label:
+    text: GitHub Actions
+github.actions.workflow.file.json.schema:
+    text: GitHub Workflow JSON Schema
+gql.error.in.field:
+    text: '{0} error in {1} field {2}'
+group.GitHub.Copy.Link.CopyReferencePopup.text:
+    text: GitHub Repository URL
+group.GitHub.Copy.Link.text:
+    text: Copy Link to GitHub Repository
+group.GitHub.MainMenu.text:
+    text: GitHub
+group.Github.Open.In.Browser.EditorTabPopup.text:
+    text: View in Browser
+group.Github.Open.In.Browser.GoToAction.text:
+    text: Open on GitHub
+group.Github.PullRequest.Details.Commit.Tree.ViewOptions.text:
+    text: View Options
+group.Github.PullRequest.Diff.Thread.View.Options.text:
+    text: Show Review Threads
+issue.state.closed:
+    text: Closed
+issue.state.open:
+    text: Open
+label.login.option.separator:
+    text: or
+label.login.progress:
+    text: Logging in…
+link.label.use.token:
+    text: Use token…
+login.account.already.added:
+    text: Account ''{0}'' already added
+login.to.github:
+    text: Log In to GitHub
+login.to.github.enterprise:
+    text: Log In to GitHub Enterprise
+login.to.github.enterprise.action:
+    text: Log In to GitHub Enterprise…
+login.token.cannot.be.empty:
+    text: Token cannot be empty
+login.via.github.action:
+    text: Log In via GitHub…
+open.on.github.action:
+    text: View in browser
+open.on.github.action.description:
+    text: View corresponding link in browser
+progress.text.loading.protected.branches:
+    text: Loading GitHub branch protection rules
+pull.request.adding.reviewers:
+    text: Adding reviewers
+pull.request.adjustment.failed:
+    text: Failed to adjust the list
+pull.request.assignees:
+    text: 'Assignees:'
+pull.request.assignees.popup:
+    text: '{0, choice, 1#Assignee|2#Assignees}'
+pull.request.change.remote.or.account:
+    text: Change Repository or Account…
+pull.request.close.action:
+    text: Close Pull Request
+pull.request.comment.hint:
+    text: '{0} to comment'
+pull.request.comment.suggested.changes.applying:
+    text: Applying patch
+pull.request.comment.suggested.changes.committing:
+    text: Applying and committing changes
+pull.request.comment.suggested.changes.resolving:
+    text: Resolving thread
+pull.request.commit.does.not.contain.changes:
+    text: Commit does not contain any changes
+pull.request.commits:
+    text: Commits
+pull.request.conflicts.merge.tooltip:
+    text: Pull request cannot be merged
+pull.request.create.action:
+    text: Create Pull Request
+pull.request.create.already.exists:
+    text: Pull request already exists
+pull.request.create.already.exists.view:
+    text: View
+pull.request.create.checking.branches:
+    text: Checking pull request branches
+pull.request.create.creating:
+    text: Creating a pull request
+pull.request.create.description:
+    text: Description
+pull.request.create.draft.action:
+    text: Create Draft Pull Request
+pull.request.create.error:
+    text: Failed to create a pull request
+pull.request.create.error.details:
+    text: Details
+pull.request.create.failed.to.check.branches:
+    text: Failed to check pull request branches
+pull.request.create.failed.to.load.changes:
+    text: Failed to load changes
+pull.request.create.failed.to.load.commits:
+    text: Failed to load commits
+pull.request.create.input.remote.branch.comment:
+    text: Your changes will be pushed to the remote repository to create the pull request
+pull.request.create.input.remote.branch.name:
+    text: 'Remote branch name:'
+pull.request.create.input.remote.branch.title:
+    text: New Remote Branch for Pull Request
+pull.request.create.no.changes:
+    text: No changes between ''{0}'' and ''{1}''
+pull.request.create.no.commits:
+    text: No commits
+pull.request.create.process.title:
+    text: Creating pull request…
+pull.request.create.pushing:
+    text: Pushing a pull request branch
+pull.request.create.select.branches:
+    text: Select pull request base and head to view changes
+pull.request.create.setting.metadata:
+    text: Updating pull request fields
+pull.request.create.title:
+    text: Title
+pull.request.details.adjusting.assignees:
+    text: Adjusting assignees…
+pull.request.details.adjusting.labels:
+    text: Adjusting labels…
+pull.request.details.adjusting.reviewers:
+    text: Adjusting reviewers…
+pull.request.diff.editor.title:
+    text: 'Diff for Pull Request #{0,number,#}'
+pull.request.discard.pending.comments:
+    text: Discard pending comments
+pull.request.discard.pending.comments.dialog.msg:
+    text: Are you sure you want to delete all pending comments?
+pull.request.discard.pending.comments.dialog.title:
+    text: Discard Pending Review
+pull.request.does.not.contain.changes:
+    text: Pull request does not contain any changes
+pull.request.does.not.contain.commits:
+    text: Pull request does not contain any commits
+pull.request.editor.timeline:
+    text: Pull Request Timeline
+pull.request.files:
+    text: Files
+pull.request.info:
+    text: Info
+pull.request.labels:
+    text: 'Labels:'
+pull.request.labels.popup:
+    text: '{0, choice, 1#Label|2#Labels}'
+pull.request.list.cannot.load:
+    text: Can't load pull requests
+pull.request.list.error.authorization:
+    text: User authorization failed
+pull.request.list.filter.assignee:
+    text: Assignee
+pull.request.list.filter.author:
+    text: Author
+pull.request.list.filter.label:
+    text: Label
+pull.request.list.filter.quick.assigned:
+    text: Assigned to you
+pull.request.list.filter.quick.open:
+    text: Open
+pull.request.list.filter.quick.review.requests:
+    text: Review requests
+pull.request.list.filter.quick.yours:
+    text: Your pull requests
+pull.request.list.filter.review:
+    text: Review
+pull.request.list.filter.review.approved.full:
+    text: Approved review
+pull.request.list.filter.review.approved.short:
+    text: Approved review
+pull.request.list.filter.review.awaiting.full:
+    text: Awaiting review from you
+pull.request.list.filter.review.awaiting.short:
+    text: Awaiting review
+pull.request.list.filter.review.change.requested.full:
+    text: Changes requested
+pull.request.list.filter.review.change.requested.short:
+    text: Changes requested
+pull.request.list.filter.review.no.full:
+    text: No reviews
+pull.request.list.filter.review.no.short:
+    text: No reviews
+pull.request.list.filter.review.not.full:
+    text: Not reviewed by you
+pull.request.list.filter.review.not.short:
+    text: Not reviewed
+pull.request.list.filter.review.required.full:
+    text: Review required
+pull.request.list.filter.review.required.short:
+    text: Review required
+pull.request.list.filter.review.reviewed.full:
+    text: Reviewed by you
+pull.request.list.filter.review.reviewed.short:
+    text: Reviewed
+pull.request.list.filter.sort:
+    text: Sort
+pull.request.list.filter.sort.least.commented:
+    text: Least commented
+pull.request.list.filter.sort.least.recently.updated:
+    text: Least recently updated
+pull.request.list.filter.sort.most.commented:
+    text: Most commented
+pull.request.list.filter.sort.newest:
+    text: Newest
+pull.request.list.filter.sort.oldest:
+    text: Oldest
+pull.request.list.filter.sort.recently.updated:
+    text: Recently updated
+pull.request.list.filter.state:
+    text: State
+pull.request.list.filter.state.closed:
+    text: Closed
+pull.request.list.filter.state.merged:
+    text: Merged
+pull.request.list.filter.state.open:
+    text: Open
+pull.request.list.filters.clear:
+    text: Clear filters
+pull.request.list.no.matches:
+    text: No pull requests matching filters
+pull.request.list.nothing.loaded:
+    text: No pull requests in {0}
+pull.request.list.outdated:
+    text: The list is outdated.
+pull.request.list.refresh:
+    text: Refresh
+pull.request.loading.status:
+    text: Loading pull request status
+pull.request.merge.commit.action:
+    text: Merge Pull Request…
+pull.request.merge.disabled:
+    text: Merging is disabled for this project
+pull.request.merge.pull.request:
+    text: 'Merge pull request #{0,number,#}'
+pull.request.new.diff.editor.title:
+    text: Diff for New Pull Request
+pull.request.no.labels:
+    text: No labels
+pull.request.no.reviewers:
+    text: No reviewers
+pull.request.notification.create.action:
+    text: Create pull request
+pull.request.notification.open.action:
+    text: View pull request
+pull.request.on.branch:
+    text: '#{0,number,#} on {1}'
+pull.request.on.branch.description:
+    text: 'Pull request #{0,number,#} exists for current branch {1}'
+pull.request.on.branch.error:
+    text: 'Pull request #{0,number,#} exists for current branch {1}, but pull request details loading failed'
+pull.request.on.branch.loading:
+    text: 'Loading changes for pull request #{0,number,#}'
+pull.request.on.branch.out.of.sync:
+    text: 'Pull request #{0,number,#} exists for current branch {1}, but local branch is out of sync with remote'
+pull.request.on.branch.update.failed.title:
+    text: Pull Request branch update failed
+pull.request.open.action:
+    text: View Pull Request
+pull.request.open.action.description:
+    text: View pull request information and timeline
+pull.request.post.action:
+    text: Post Pull Request
+pull.request.refresh.details.action:
+    text: Refresh Pull Request
+pull.request.refresh.list.action:
+    text: Refresh List
+pull.request.removing.reviewers:
+    text: Removing reviewers
+pull.request.reopen.action:
+    text: Reopen Pull Request
+pull.request.repo.access.required:
+    text: Repository access required to manage pull requests
+pull.request.repo.write.access.required:
+    text: Repository write access required to merge pull requests
+pull.request.resolveConflicts.error.remoteNotFound:
+    text: '"{0} remote not found: {1}'
+pull.request.resolveConflicts.error.repositoryNotFound:
+    text: '{0} repository not found'
+pull.request.review.actions.submit:
+    text: '{0, choice, 0#Submit Review…|1#Submit Review ({0})…}'
+pull.request.review.editor.add.review.comment:
+    text: Add Review Comment
+pull.request.review.editor.add.single.comment:
+    text: Add Single Comment
+pull.request.review.editor.start.review:
+    text: Start Review
+pull.request.review.new.comment.code.outline.tooltip:
+    text: Drag to select several lines for commenting
+pull.request.review.refresh.data.task:
+    text: Refresh Review Data
+pull.request.review.refresh.data.task.description:
+    text: Refresh GitHub pull request review information
+pull.request.review.submit.action.description:
+    text: Submit pull request review
+pull.request.review.submit.approve.button:
+    text: Approve
+pull.request.review.submit.comment.button:
+    text: Comment
+pull.request.review.submit.comment.description:
+    text: Submit general feedback without explicit approval
+pull.request.review.submit.request.changes:
+    text: Request Changes
+pull.request.reviewers:
+    text: 'Reviewers:'
+pull.request.reviewers.popup:
+    text: '{0, choice, 1#Reviewer|2#Reviewers}'
+pull.request.select.action:
+    text: Select Opened Pull Request
+pull.request.timeline.approved.changes:
+    text: approved the changes
+pull.request.timeline.branch.deleted:
+    text: deleted the {0} branch
+pull.request.timeline.branch.force.pushed:
+    text: force-pushed the {0} branch
+pull.request.timeline.branch.head.restored:
+    text: restored head branch
+pull.request.timeline.cannot.load:
+    text: Can't load timeline items
+pull.request.timeline.changed.base.branch:
+    text: changed the base branch
+pull.request.timeline.closed:
+    text: closed this
+pull.request.timeline.comment.suggested.changes:
+    text: Suggested change
+pull.request.timeline.comment.suggested.changes.action.commit.name:
+    text: Commit…
+pull.request.timeline.comment.suggested.changes.button:
+    text: Apply Locally
+pull.request.timeline.comment.suggested.changes.progress.bar.apply:
+    text: Applying suggested change
+pull.request.timeline.comment.suggested.changes.progress.bar.commit:
+    text: Committing suggested change
+pull.request.timeline.comment.suggested.changes.tooltip.different.branch:
+    text: Unable to apply the suggested change from a pull request in a different branch
+pull.request.timeline.comment.suggested.changes.tooltip.outdated:
+    text: Outdated suggestions cannot be applied
+pull.request.timeline.comment.suggested.changes.tooltip.resolved:
+    text: This suggestion has been resolved
+pull.request.timeline.commit.added:
+    text: added a commit to this pull request
+pull.request.timeline.commits.added:
+    text: added {0} commits to this pull request
+pull.request.timeline.connected:
+    text: linked an issue that may be closed by this
+pull.request.timeline.disconnected:
+    text: removed a link to an issue
+pull.request.timeline.event.assigned:
+    text: assigned {0}
+pull.request.timeline.event.assigned.and.unassigned:
+    text: assigned {0} and unassigned {1}
+pull.request.timeline.event.labels.added:
+    text: added labels {0}
+pull.request.timeline.event.labels.added.and.removed:
+    text: added labels {0} and removed labels {1}
+pull.request.timeline.event.labels.removed:
+    text: removed labels {0}
+pull.request.timeline.event.removed.review.request:
+    text: removed review request from {0}
+pull.request.timeline.event.requested.review:
+    text: requested a review from {0}
+pull.request.timeline.event.requested.review.and.removed.review.request:
+    text: requested a review from {0} and removed review request from {1}
+pull.request.timeline.event.unassigned:
+    text: unassigned {0}
+pull.request.timeline.marked.as.draft:
+    text: marked this pull request as draft
+pull.request.timeline.marked.as.ready:
+    text: marked this pull request as ready for review
+pull.request.timeline.mentioned:
+    text: mentioned this pull request
+pull.request.timeline.merged:
+    text: merged this
+pull.request.timeline.merged.commit:
+    text: merged commit {0} into {1}
+pull.request.timeline.no.description:
+    text: No description provided
+pull.request.timeline.refresh.action:
+    text: Refresh Timeline
+pull.request.timeline.refresh.action.description:
+    text: Check for new timeline events
+pull.request.timeline.renamed:
+    text: renamed this pull request from ''{0}'' to ''{1}''
+pull.request.timeline.reopened:
+    text: reopened this
+pull.request.timeline.requested.changes:
+    text: requested changes
+pull.request.timeline.reviewed:
+    text: reviewed the changes
+pull.request.timeline.stale.review.dismissed:
+    text: dismissed <b>{0}</b>''s stale review
+pull.request.timeline.started.review:
+    text: started a review
+pull.request.unassigned:
+    text: Unassigned
+pull.request.unresolved.comments:
+    text: '{0,choice,0#No unresolved comments|1#{0} unresolved comment|2#{0} unresolved comments}'
+pull.request.view.conversations.action.description:
+    text: View pull request timeline
+pull.request.view.list:
+    text: View Pull Requests
+pullRequest.timeline.merged.body.delete:
+    text: delete
+pullRequest.timeline.merged.body.restore:
+    text: Restore…
+pullRequest.timeline.merged.body.withDelete:
+    text: You can now {0} {1}.
+pullRequest.timeline.merged.body.withoutDelete:
+    text: '{0} has been deleted. {1}'
+pullRequest.timeline.merged.title:
+    text: Pull Request Successfully Merged
+rebase.error:
+    text: Can't perform GitHub rebase
+rebase.error.failed.to.match.gh.repo:
+    text: Failed to match local and GitHub repositories
+rebase.error.multi.repo.not.supported:
+    text: Multi-repository projects are not supported
+rebase.error.no.default.branch:
+    text: Unable to determine upstream branch - no default branch set for repository
+rebase.error.no.suitable.account.found:
+    text: No suitable GitHub account found
+rebase.error.remote.origin.not.found:
+    text: Git remote 'origin' not found
+rebase.error.repo.not.found:
+    text: Repository {0} was not found
+rebase.error.upstream.not.found:
+    text: Remote {0} was not added
+rebase.process:
+    text: Rebasing GitHub fork…
+rebase.process.adding.github.parent.as.remote.host:
+    text: Adding GitHub parent as a remote host…
+rebase.process.configuring.upstream.remote:
+    text: Configuring upstream remote…
+rebase.process.fetching.upstream:
+    text: Fetching upstream…
+rebase.process.operation.title:
+    text: Rebasing
+rebase.process.rebasing.branch.onto:
+    text: Rebasing current branch onto ''{0}''…
+rebase.process.success:
+    text: Successfully rebased GitHub fork
+request.response.0:
+    text: 'Request response: {0}.'
+retry.action:
+    text: Retry
+retry.link:
+    text: Retry
+server.unreachable:
+    text: Server is unreachable
+settings.automatically.mark.as.viewed:
+    text: Automatically mark opened files as viewed
+settings.clone.ssh:
+    text: Clone git repositories using ssh
+settings.configurable.display.name:
+    text: GitHub
+settings.enable.pr.seen.markers:
+    text: Enable unread markers on Pull Requests in the list
+settings.timeout:
+    text: 'Connection timeout:'
+settings.timeout.seconds:
+    text: seconds
+share.button:
+    text: Share
+share.dialog.account.info.load.error.prefix:
+    text: 'Cannot load information for {0}:'
+share.dialog.account.info.load.process.canceled:
+    text: Process cancelled
+share.dialog.description:
+    text: 'Description:'
+share.dialog.private:
+    text: Private
+share.dialog.remote:
+    text: 'Remote:'
+share.dialog.repo.name:
+    text: 'Repository name:'
+share.dialog.share.by:
+    text: 'Share by:'
+share.error.private.repos.not.supported:
+    text: Your account doesn't support private repositories
+share.error.remote.with.selected.name.exists:
+    text: Remote with selected name already exists
+share.error.repo.with.selected.name.exists:
+    text: Repository with selected name already exists
+share.on.github:
+    text: Share Project On GitHub
+share.validation.invalid.repo.name:
+    text: Invalid repository name. Name should consist of letters, numbers, dashes, dots and underscores
+share.validation.no.remote.name:
+    text: No remote name selected
+share.validation.no.repo.name:
+    text: No repository name selected
+tab.title.pull.requests.new:
+    text: New Pull Request at {0}
+task.comment.author:
+    text: 'Author:'
+task.comment.date:
+    text: 'Date:'
+task.repo.host.field:
+    text: 'Host:'
+task.repo.name.field.empty.hint:
+    text: Repository Name
+task.repo.owner.field.empty.hint:
+    text: Repository Owner
+task.repo.repository.field:
+    text: 'Repository:'
+task.repo.token.create.button:
+    text: Create API token
+task.repo.token.field:
+    text: 'API token:'
+task.repo.token.field.empty.hint:
+    text: OAuth2 token
+toolwindow.stripe.Pull_Requests:
+    text: Pull Requests
+toolwindow.stripe.Pull_Requests.shortName:
+    text: PR
+unknown.host.error:
+    text: 'Unknown host: {0}'
+unknown.loading.error:
+    text: Unknown loading error
