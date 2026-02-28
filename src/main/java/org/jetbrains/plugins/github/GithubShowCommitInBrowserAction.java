@@ -35,7 +35,7 @@ abstract class GithubShowCommitInBrowserAction extends DumbAwareAction {
         super(
             LocalizeValue.localizeTODO("Open on GitHub"),
             LocalizeValue.localizeTODO("Open the selected commit in browser"),
-            GitHubIconGroup.github_icon()
+            GitHubIconGroup.github()
         );
     }
 

@@ -81,7 +81,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
         super(
             GithubLocalize.actionCreatePullRequestText(),
             GithubLocalize.actionCreatePullRequestDescription(),
-            GitHubIconGroup.github_icon()
+            GitHubIconGroup.github()
         );
     }
 

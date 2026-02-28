@@ -70,7 +70,7 @@ public class GithubRebaseAction extends DumbAwareAction {
         super(
             GithubLocalize.actionSyncForkText(),
             GithubLocalize.actionSyncForkDescription(),
-            GitHubIconGroup.github_icon()
+            GitHubIconGroup.github()
         );
     }
 

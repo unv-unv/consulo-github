@@ -158,7 +158,7 @@ public class GithubRepository extends BaseRepositoryImpl {
             @Nonnull
             @Override
             public Image getIcon() {
-                return GitHubIconGroup.github_icon();
+                return GitHubIconGroup.github();
             }
 
             @Nonnull

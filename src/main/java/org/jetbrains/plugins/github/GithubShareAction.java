@@ -84,7 +84,7 @@ public class GithubShareAction extends DumbAwareAction {
         super(
             LocalizeValue.localizeTODO("Share project on GitHub"),
             LocalizeValue.localizeTODO("Easily share project on GitHub"),
-            GitHubIconGroup.github_icon()
+            GitHubIconGroup.github()
         );
     }
 

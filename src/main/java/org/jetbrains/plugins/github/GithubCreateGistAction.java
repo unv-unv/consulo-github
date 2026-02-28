@@ -77,7 +77,7 @@ public class GithubCreateGistAction extends DumbAwareAction {
         super(
             GithubLocalize.actionCreateGistText(),
             GithubLocalize.actionCreateGistDescription(),
-            GitHubIconGroup.github_icon()
+            GitHubIconGroup.github()
         );
     }
 

@@ -54,7 +54,7 @@ public class GithubOpenInBrowserAction extends DumbAwareAction {
         super(
             LocalizeValue.localizeTODO("GitHub"),
             LocalizeValue.localizeTODO("Open corresponding link in browser"),
-            GitHubIconGroup.github_icon()
+            GitHubIconGroup.github()
         );
     }
 
