@@ -131,7 +131,7 @@ public class GithubRebaseAction extends DumbAwareAction {
 
                 if (upstreamRemoteUrl == null) {
                     LOG.info("Configuring upstream remote");
-                    indicator.setTextValue(LocalizeValue.localizeTODO("Configuring upstream remote..."));
+                    indicator.setText(LocalizeValue.localizeTODO("Configuring upstream remote..."));
                     upstreamRemoteUrl = configureUpstreamRemote(project, root, gitRepository, indicator);
                     if (upstreamRemoteUrl == null) {
                         return;
@@ -160,13 +160,13 @@ public class GithubRebaseAction extends DumbAwareAction {
                 }
 
                 LOG.info("Fetching upstream");
-                indicator.setTextValue(LocalizeValue.localizeTODO("Fetching upstream..."));
+                indicator.setText(LocalizeValue.localizeTODO("Fetching upstream..."));
                 if (!fetchParent(project, gitRepository, indicator)) {
                     return;
                 }
 
                 LOG.info("Rebasing current branch");
-                indicator.setTextValue(LocalizeValue.localizeTODO("Rebasing current branch..."));
+                indicator.setText(LocalizeValue.localizeTODO("Rebasing current branch..."));
                 rebaseCurrentBranch(project, root, gitRepository, indicator);
             }
         }.queue();
@@ -200,7 +200,7 @@ public class GithubRebaseAction extends DumbAwareAction {
         String parentRepoUrl = GithubUrlUtil.getGitHost() + '/' + repositoryInfo.getParent().getFullName() + ".git";
 
         LOG.info("Adding GitHub parent as a remote host");
-        indicator.setTextValue(LocalizeValue.localizeTODO("Adding GitHub parent as a remote host..."));
+        indicator.setText(LocalizeValue.localizeTODO("Adding GitHub parent as a remote host..."));
         return addParentAsUpstreamRemote(project, root, parentRepoUrl, gitRepository);
     }
 

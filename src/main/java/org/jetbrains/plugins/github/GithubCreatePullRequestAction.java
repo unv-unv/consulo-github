@@ -183,7 +183,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
             @Override
             public void run(@Nonnull ProgressIndicator indicator) {
                 LOG.info("Pushing current branch");
-                indicator.setTextValue(LocalizeValue.localizeTODO("Pushing current branch..."));
+                indicator.setText(LocalizeValue.localizeTODO("Pushing current branch..."));
                 GitCommandResult result = git.push(repository, remoteName, remoteUrl, puttyKey, currentBranch.getName(), true);
                 if (!result.success()) {
                     GithubNotifications.showError(
@@ -209,7 +209,7 @@ public class GithubCreatePullRequestAction extends DumbAwareAction {
                 }
 
                 LOG.info("Creating pull request");
-                indicator.setTextValue(LocalizeValue.localizeTODO("Creating pull request..."));
+                indicator.setText(LocalizeValue.localizeTODO("Creating pull request..."));
                 GithubPullRequest request =
                     createPullRequest(project, auth, targetRepo, dialog.getRequestTitle(), dialog.getDescription(), from, onto);
                 if (request == null) {
