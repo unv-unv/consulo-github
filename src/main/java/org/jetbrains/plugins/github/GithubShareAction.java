@@ -174,7 +174,7 @@ public class GithubShareAction extends DumbAwareAction {
             public void run(@Nonnull ProgressIndicator indicator) {
                 // create GitHub repo (network)
                 LOG.info("Creating GitHub repository");
-                indicator.setTextValue(LocalizeValue.localizeTODO("Creating GitHub repository..."));
+                indicator.setText(LocalizeValue.localizeTODO("Creating GitHub repository..."));
                 String url = createGithubRepository(
                     project,
                     githubInfo.getAuthData(),
@@ -191,7 +191,7 @@ public class GithubShareAction extends DumbAwareAction {
                 LOG.info("Binding local project with GitHub");
                 if (!gitDetected) {
                     LOG.info("No git detected, creating empty git repo");
-                    indicator.setTextValue(LocalizeValue.localizeTODO("Creating empty git repo..."));
+                    indicator.setText(LocalizeValue.localizeTODO("Creating empty git repo..."));
                     if (!createEmptyGitRepository(project, root, indicator)) {
                         return;
                     }
@@ -206,7 +206,7 @@ public class GithubShareAction extends DumbAwareAction {
 
                 //git remote add origin git@github.com:login/name.git
                 LOG.info("Adding GitHub as a remote host");
-                indicator.setTextValue(LocalizeValue.localizeTODO("Adding GitHub as a remote host..."));
+                indicator.setText(LocalizeValue.localizeTODO("Adding GitHub as a remote host..."));
                 if (!addGithubRemote(project, root, remoteName, remoteUrl, repository)) {
                     return;
                 }
@@ -218,7 +218,7 @@ public class GithubShareAction extends DumbAwareAction {
 
                 //git push origin master
                 LOG.info("Pushing to github master");
-                indicator.setTextValue(LocalizeValue.localizeTODO("Pushing to github master..."));
+                indicator.setText(LocalizeValue.localizeTODO("Pushing to github master..."));
                 if (!pushCurrentBranch(project, repository, remoteName, remoteUrl, name, url)) {
                     return;
                 }
@@ -344,7 +344,7 @@ public class GithubShareAction extends DumbAwareAction {
         LOG.info("Trying to commit");
         try {
             LOG.info("Adding files for commit");
-            indicator.setTextValue(LocalizeValue.localizeTODO("Adding files to git..."));
+            indicator.setText(LocalizeValue.localizeTODO("Adding files to git..."));
 
             // ask for files to add
             List<VirtualFile> trackedFiles = ChangeListManager.getInstance(project).getAffectedFiles();
@@ -389,7 +389,7 @@ public class GithubShareAction extends DumbAwareAction {
 
             // commit
             LOG.info("Performing commit");
-            indicator.setTextValue(LocalizeValue.localizeTODO("Performing commit..."));
+            indicator.setText(LocalizeValue.localizeTODO("Performing commit..."));
             GitSimpleHandler handler = new GitSimpleHandler(project, root, GitCommand.COMMIT);
             handler.addParameters("-m", dialog.getCommitMessage());
             handler.endOptions();
